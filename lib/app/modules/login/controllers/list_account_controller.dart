@@ -10,9 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
+import '../../../widget/body/forgot_pass.dart';
+
 class ListAccountController extends GetxController
     with GetTickerProviderStateMixin {
+  TextEditingController inputForgotPass = TextEditingController();
+
+  final forgotPassErr = "".obs;
   final isLoading = false.obs;
+  final isLoadingForgotPass = false.obs;
 
   final _log = Logger();
   final AuthController authController = Get.find();
@@ -39,6 +45,19 @@ class ListAccountController extends GetxController
     super.onClose();
   }
 
+  bool get validatorForgotPass {
+    var result = true;
+    forgotPassErr.value = '';
+    if (inputForgotPass.text.trim().isEmpty) {
+      forgotPassErr.value = 'thông tin không được để trống';
+      result = false;
+    } else if (!inputForgotPass.text.isEmail) {
+      forgotPassErr.value = 'email không đúng định dạng';
+      result = false;
+    }
+    return result;
+  }
+
   void showBottomSheet(UserModel user) {
     double maxHeight =
         user.deviceMobi!.contains(authController.device.value) ? 110 : 150;
@@ -58,8 +77,20 @@ class ListAccountController extends GetxController
             user: user,
             changePass: () {
               Get.back();
-              changePassController.clearDataVerifiCode();
-              handleVerifiCode(user);
+              inputForgotPass.clear();
+              isLoadingForgotPass(false);
+              showDialog(
+                  context: Get.context!,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      content: Obx(() => ForgotPass(
+                          textController: inputForgotPass,
+                          isLoading: isLoadingForgotPass.value,
+                          onPressed: () {})),
+                    );
+                  });
             },
           );
         });

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
+import 'package:boarding_group/app/modules/login/controllers/login_controller.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -172,6 +173,7 @@ class RegisterController extends GetxController {
     isLoading.value = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
       clearData();
+      authController.isHasAccount.value = true;
       Utils.messSuccess(res.data['message']);
     } else {
       Utils.messError(res.data['message']);

@@ -45,7 +45,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
           ),
         ),
         const SizedBox(height: 30),
-        Text("Spending Management",
+        Text("Boarding Group",
             textAlign: TextAlign.center,
             style: PrimaryStyle.bold(32, color: kPrimaryColor))
       ]),

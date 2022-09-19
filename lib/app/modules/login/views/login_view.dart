@@ -62,21 +62,26 @@ class LoginView extends GetView<LoginController> {
               if (Get.parameters['category'] == '0') ...[
                 Align(
                   alignment: Alignment.centerRight,
-                  child: SecondTextButton(
-                      onPressed: () => Get.toNamed(Routes.REGISTER),
-                      title: 'Đăng ký tài khoản',
-                      iconRight: Icons.arrow_forward_ios),
+                  child: Obx(() {
+                    if (controller.authController.isHasAccount.value) {
+                      return SecondTextButton(
+                          onPressed: () => controller.showForgotPass(),
+                          title: 'Quên mật khẩu?');
+                    }
+                    return SecondTextButton(
+                        onPressed: () => Get.toNamed(Routes.REGISTER),
+                        title: 'Đăng ký tài khoản',
+                        iconRight: Icons.arrow_forward_ios);
+                  }),
                 )
               ] else ...[
-                if (Get.parameters['category'] != '') ...[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SecondTextButton(
-                        onPressed: () => Get.back(),
-                        title: 'Đổi tài khoản',
-                        iconLeft: Icons.arrow_back_ios),
-                  )
-                ]
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SecondTextButton(
+                      onPressed: () => Get.back(),
+                      title: 'Đổi tài khoản',
+                      iconLeft: Icons.arrow_back_ios),
+                )
               ],
             ],
           ),
@@ -89,7 +94,7 @@ class LoginView extends GetView<LoginController> {
     if (Get.parameters['category'] == '1') {
       return controller.userModel.value.userName!;
     }
-    return 'Spending Management';
+    return 'Boarding Group';
   }
 
   IconData showIcon(bool value) {

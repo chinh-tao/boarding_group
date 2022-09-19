@@ -3,6 +3,7 @@ import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/widget/body/forgot_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -10,11 +11,14 @@ import 'package:logger/logger.dart';
 class LoginController extends GetxController with GetTickerProviderStateMixin {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPass = TextEditingController();
+  TextEditingController inputForgotPass = TextEditingController();
 
   final userModel = UserModel().obs;
   final isLoadingLogin = false.obs;
+  final isLoadingForgotPass = false.obs;
   final listErrLogin = ["", ""].obs;
   final isHidePass = true.obs;
+  final forgotPassErr = "".obs;
 
   final _log = Logger();
   final AuthController authController = Get.find();
@@ -67,6 +71,19 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     return result;
   }
 
+  bool get validatorForgotPass {
+    var result = true;
+    forgotPassErr.value = '';
+    if (inputForgotPass.text.trim().isEmpty) {
+      forgotPassErr.value = 'thông tin không được để trống';
+      result = false;
+    } else if (!inputForgotPass.text.isEmail) {
+      forgotPassErr.value = 'email không đúng định dạng';
+      result = false;
+    }
+    return result;
+  }
+
   Future<void> submit() async {
     if (!validatorLogin) return;
 
@@ -90,5 +107,25 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   void clearDataLogin() {
     inputEmail.clear();
     inputPass.clear();
+  }
+
+  void showForgotPass() {
+    inputForgotPass.clear();
+    isLoadingForgotPass(false);
+    showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Obx(() => ForgotPass(
+                textController: inputForgotPass,
+                isLoading: isLoadingForgotPass.value,
+                error: forgotPassErr.value,
+                onPressed: () {
+                  if (!validatorForgotPass) return;
+                })),
+          );
+        });
   }
 }
