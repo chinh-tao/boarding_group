@@ -1,6 +1,7 @@
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
+import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
 import 'package:boarding_group/app/widget/body/forgot_pass.dart';
@@ -11,11 +12,9 @@ import 'package:logger/logger.dart';
 class LoginController extends GetxController with GetTickerProviderStateMixin {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPass = TextEditingController();
-  TextEditingController inputForgotPass = TextEditingController();
 
   final userModel = UserModel().obs;
   final isLoadingLogin = false.obs;
-  final isLoadingForgotPass = false.obs;
   final listErrLogin = ["", ""].obs;
   final isHidePass = true.obs;
   final forgotPassErr = "".obs;
@@ -71,19 +70,6 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     return result;
   }
 
-  bool get validatorForgotPass {
-    var result = true;
-    forgotPassErr.value = '';
-    if (inputForgotPass.text.trim().isEmpty) {
-      forgotPassErr.value = 'thông tin không được để trống';
-      result = false;
-    } else if (!inputForgotPass.text.isEmail) {
-      forgotPassErr.value = 'email không đúng định dạng';
-      result = false;
-    }
-    return result;
-  }
-
   Future<void> submit() async {
     if (!validatorLogin) return;
 
@@ -110,22 +96,13 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void showForgotPass() {
-    inputForgotPass.clear();
-    isLoadingForgotPass(false);
     showDialog(
         context: Get.context!,
         builder: (context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            content: Obx(() => ForgotPass(
-                textController: inputForgotPass,
-                isLoading: isLoadingForgotPass.value,
-                error: forgotPassErr.value,
-                onPressed: () {
-                  if (!validatorForgotPass) return;
-                })),
-          );
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              content: const ForgotPassView());
         });
   }
 }

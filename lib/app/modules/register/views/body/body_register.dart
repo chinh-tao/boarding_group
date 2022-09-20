@@ -89,15 +89,7 @@ class BodyRegister extends StatelessWidget {
                       colors: _.isEditText[1] ? kGreyColor400 : kPrimaryColor,
                       isLoading: _.isLoading.value,
                       titleButton: "Đăng ký",
-                      onPressed: () async => await _.submit())),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SecondTextButton(
-                        onPressed: () => Get.back(),
-                        iconLeft: Icons.arrow_back_ios,
-                        title: 'Đăng nhập'),
-                  )
+                      onPressed: () async => await _.submit()))
                 ],
               );
             })

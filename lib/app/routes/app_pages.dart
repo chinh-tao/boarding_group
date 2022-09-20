@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/auth/auth_binding.dart';
 import '../modules/change_pass/bindings/change_pass_binding.dart';
+import '../modules/forgot_pass/bindings/forgot_pass_binding.dart';
+import '../modules/forgot_pass/views/forgot_pass_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/list_account_binding.dart';
@@ -27,7 +29,8 @@ class AppPages {
     GetPage(
         name: _Paths.LOGIN,
         page: () => const LoginView(),
-        binding: LoginBinding()),
+        binding: LoginBinding(),
+        bindings: [ForgotPassBinding()]),
     GetPage(
         name: _Paths.REGISTER,
         page: () => const RegisterView(),
@@ -40,6 +43,6 @@ class AppPages {
         name: _Paths.LIST_ACCOUNT,
         page: () => const ListAccountView(),
         binding: ListAccountBinding(),
-        bindings: [ChangePassBinding()]),
+        bindings: [ForgotPassBinding()])
   ];
 }

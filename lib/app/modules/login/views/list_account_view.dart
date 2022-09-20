@@ -1,10 +1,10 @@
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/modules/login/views/body/body_list_account.dart';
+import 'package:boarding_group/app/modules/login/views/body/custom_menu.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
 import '../controllers/list_account_controller.dart';
 
 class ListAccountView extends GetView<ListAccountController> {
@@ -12,15 +12,10 @@ class ListAccountView extends GetView<ListAccountController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: kPrimaryColor,
-      body: const BodyListAccount(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kOrangeColor800,
-        onPressed: () =>
-            Get.toNamed(Routes.LOGIN, parameters: {'category': '2'}),
-        child: const Icon(Icons.add, color: kWhiteColor, size: 27),
-      ),
+      body: BodyListAccount(),
+      floatingActionButton: CustomMenu(),
     );
   }
 }

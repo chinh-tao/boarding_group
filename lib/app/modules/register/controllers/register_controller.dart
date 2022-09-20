@@ -5,6 +5,7 @@ import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/modules/login/controllers/login_controller.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
+import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -172,9 +173,7 @@ class RegisterController extends GetxController {
     final res = await api.post('/register', data: form);
     isLoading.value = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      clearData();
-      authController.isHasAccount.value = true;
-      Utils.messSuccess(res.data['message']);
+      Get.offNamed(Routes.LOGIN, parameters: {'category': '0'});
     } else {
       Utils.messError(res.data['message']);
     }

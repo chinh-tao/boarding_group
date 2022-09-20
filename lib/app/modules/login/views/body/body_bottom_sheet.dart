@@ -7,17 +7,11 @@ import 'package:get/get.dart';
 
 class BodyBottomSheet extends StatelessWidget {
   const BodyBottomSheet(
-      {Key? key,
-      required this.removeAccount,
-      required this.user,
-      required this.changePass,
-      this.isHideMenu = false})
+      {Key? key, required this.removeAccount, required this.user})
       : super(key: key);
 
   final UserModel user;
   final Function()? removeAccount;
-  final Function()? changePass;
-  final bool isHideMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -34,19 +28,12 @@ class BodyBottomSheet extends StatelessWidget {
                   parameters: {'category': '1'}, arguments: {'user': user});
             }),
         ItemBottomSheet(
-            content: 'Quên mật khẩu',
-            icon: Icons.pin_rounded,
-            onTap: changePass,
-            paddingVertical: 7),
-        if (!isHideMenu) ...[
-          ItemBottomSheet(
-              content: 'Xoá tài khoản trên thiết bị này',
-              icon: Icons.highlight_remove,
-              textColor: kRedColor400,
-              iconColor: kRedColor400,
-              paddingVertical: 7,
-              onTap: removeAccount)
-        ]
+            content: 'Xoá tài khoản trên thiết bị này',
+            icon: Icons.highlight_remove,
+            textColor: kRedColor400,
+            iconColor: kRedColor400,
+            paddingVertical: 7,
+            onTap: removeAccount)
       ],
     );
   }

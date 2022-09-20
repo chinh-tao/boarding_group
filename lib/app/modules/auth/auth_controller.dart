@@ -13,7 +13,6 @@ class AuthController extends GetxController {
   final _log = Logger();
   final device = ''.obs;
   final listUser = <UserModel>[].obs;
-  final isHasAccount = false.obs;
 
   // save images to fire store
   late FirebaseStorage storage;
@@ -54,7 +53,10 @@ class AuthController extends GetxController {
             convertList.map((data) => UserModel.fromJson(data)).toList();
         Get.offNamed(Routes.LIST_ACCOUNT);
       } else {
-        isHasAccount.value = hasDevice;
+        if (!hasDevice) {
+          Get.offNamed(Routes.REGISTER);
+          return;
+        }
         Get.offNamed(Routes.LOGIN, parameters: {'category': '0'});
       }
     } else {

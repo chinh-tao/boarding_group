@@ -1,8 +1,7 @@
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
-import 'package:boarding_group/app/modules/change_pass/controllers/change_pass_controller.dart';
-import 'package:boarding_group/app/modules/change_pass/views/verifi_code_screen.dart';
+import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/modules/login/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
@@ -10,19 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-import '../../../widget/body/forgot_pass.dart';
-
 class ListAccountController extends GetxController
     with GetTickerProviderStateMixin {
-  TextEditingController inputForgotPass = TextEditingController();
-
   final forgotPassErr = "".obs;
   final isLoading = false.obs;
-  final isLoadingForgotPass = false.obs;
+  final isHideMenu = false.obs;
 
   final _log = Logger();
   final AuthController authController = Get.find();
-  final ChangePassController changePassController = Get.find();
   late final AnimationController _aniController =
       AnimationController(duration: const Duration(seconds: 2), vsync: this)
         ..repeat(reverse: false);
@@ -45,66 +39,20 @@ class ListAccountController extends GetxController
     super.onClose();
   }
 
-  bool get validatorForgotPass {
-    var result = true;
-    forgotPassErr.value = '';
-    if (inputForgotPass.text.trim().isEmpty) {
-      forgotPassErr.value = 'thông tin không được để trống';
-      result = false;
-    } else if (!inputForgotPass.text.isEmail) {
-      forgotPassErr.value = 'email không đúng định dạng';
-      result = false;
-    }
-    return result;
-  }
-
   void showBottomSheet(UserModel user) {
-    double maxHeight =
-        user.deviceMobi!.contains(authController.device.value) ? 110 : 150;
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: Get.context!,
-        constraints: BoxConstraints(maxHeight: maxHeight),
+        constraints: const BoxConstraints(maxHeight: 110), //110
         builder: (context) {
           return BodyBottomSheet(
-            isHideMenu: user.deviceMobi!.contains(authController.device.value),
-            removeAccount: () async {
-              Get.back();
-              showRemoveAccount(user);
-            },
-            user: user,
-            changePass: () {
-              Get.back();
-              inputForgotPass.clear();
-              isLoadingForgotPass(false);
-              showDialog(
-                  context: Get.context!,
-                  builder: (context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      content: Obx(() => ForgotPass(
-                          textController: inputForgotPass,
-                          isLoading: isLoadingForgotPass.value,
-                          onPressed: () {})),
-                    );
-                  });
-            },
-          );
-        });
-  }
-
-  void handleVerifiCode(UserModel user, {String? change}) {
-    showDialog(
-        context: Get.context!,
-        builder: (context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            content: VerifiCodeScreen(userModel: user, change: change),
-          );
+              removeAccount: () async {
+                Get.back();
+                showRemoveAccount(user);
+              },
+              user: user);
         });
   }
 
@@ -120,7 +68,7 @@ class ListAccountController extends GetxController
       if (authController.listUser.isNotEmpty) {
         Utils.messSuccess(res.data['message']);
       } else {
-        Get.toNamed(Routes.LOGIN);
+        Get.toNamed(Routes.LOGIN, parameters: {'category': '0'});
       }
     } else {
       Utils.messError(res.data['message']);
@@ -133,6 +81,19 @@ class ListAccountController extends GetxController
         onPressed: () async {
           Get.back();
           await handleRemoveAccount(user.email!);
+        });
+  }
+
+  void showForgotPass() {
+    isHideMenu.value = false;
+    showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: const ForgotPassView(),
+          );
         });
   }
 }

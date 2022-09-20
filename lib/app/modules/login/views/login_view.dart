@@ -1,6 +1,5 @@
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
-import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/widget/button/button_loading.dart';
 import 'package:boarding_group/app/widget/button/second_text_button.dart';
 import 'package:boarding_group/app/widget/custom_input.dart';
@@ -62,17 +61,9 @@ class LoginView extends GetView<LoginController> {
               if (Get.parameters['category'] == '0') ...[
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Obx(() {
-                    if (controller.authController.isHasAccount.value) {
-                      return SecondTextButton(
-                          onPressed: () => controller.showForgotPass(),
-                          title: 'Quên mật khẩu?');
-                    }
-                    return SecondTextButton(
-                        onPressed: () => Get.toNamed(Routes.REGISTER),
-                        title: 'Đăng ký tài khoản',
-                        iconRight: Icons.arrow_forward_ios);
-                  }),
+                  child: SecondTextButton(
+                      onPressed: () => controller.showForgotPass(),
+                      title: 'Quên mật khẩu?'),
                 )
               ] else ...[
                 Align(

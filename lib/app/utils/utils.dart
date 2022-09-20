@@ -137,14 +137,14 @@ class Utils {
               TextButton(
                   onPressed: () => Get.back(),
                   child: Text(
-                    'HUỶ',
-                    style: PrimaryStyle.medium(16, color: kIndigoBlueColor900),
+                    'hủy',
+                    style: PrimaryStyle.medium(18, color: kIndigoBlueColor900),
                   )),
               TextButton(
                   onPressed: onPressed,
                   child: Text(
-                    'XÁC NHẬN',
-                    style: PrimaryStyle.medium(16, color: kRedColor400),
+                    'xác nhận',
+                    style: PrimaryStyle.medium(18, color: kRedColor400),
                   ))
             ],
           );
