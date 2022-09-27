@@ -155,10 +155,10 @@ class Utils {
     final DeviceInfoPlugin _device = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo android = await _device.androidInfo;
-      return "${android.model}";
+      return "${android.id}";
     } else if (Platform.isIOS) {
       IosDeviceInfo ios = await _device.iosInfo;
-      return "${ios.model}";
+      return "${ios.identifierForVendor}";
     }
     return 'Zzz...';
   }
