@@ -21,6 +21,7 @@ dependencies:
   connectivity_plus:
   dio_smart_retry: 
   cross_scroll: 
+  path_provider:
 
 dev_dependencies: 
   flutter_lints: 2.0.1

@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AuthController extends GetxController {
   // setup in app
@@ -18,7 +20,6 @@ class AuthController extends GetxController {
   late FirebaseStorage storage;
 
   // get device
-  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
 
   @override
   void onInit() {
@@ -40,8 +41,27 @@ class AuthController extends GetxController {
     storage = FirebaseStorage.instance;
   }
 
+  Future<File> get localPath async {
+    final director = await getTemporaryDirectory();
+    final path =
+        director.path.substring(0, director.path.indexOf('/Application'));
+    return File('$path/devices.txt');
+  }
+
+  Future<String> get getIdDevice async {
+    if (Platform.isIOS) {
+      final file = await localPath;
+      if (!await file.exists()) {
+        var idDevice = await Utils.getDevice();
+        await file.writeAsString(idDevice);
+      }
+      return await file.readAsString();
+    }
+    return await Utils.getDevice();
+  }
+
   Future<void> checkDevice() async {
-    device.value = await Utils.getDevice();
+    device.value = await getIdDevice;
     final form = {"device_mobi": device.value};
     final res = await api.get('/check-device', queryParameters: form);
     if (res.statusCode == 200 && res.data['code'] == 0) {

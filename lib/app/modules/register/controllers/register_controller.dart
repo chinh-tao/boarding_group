@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/modules/auth/auth_controller.dart';
-import 'package:boarding_group/app/modules/login/controllers/login_controller.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
@@ -23,7 +22,7 @@ class RegisterController extends GetxController {
   final isLoading = false.obs;
   final isLoadUser = false.obs;
   final listError = ["", ""].obs;
-  final isEditText = <bool>[false, true].obs;
+  final isEditText = true.obs;
 
   final _log = Logger();
   final fileImage = File("").obs;
@@ -51,7 +50,7 @@ class RegisterController extends GetxController {
   bool get validatorRegister {
     var result = true;
     listError.value = ["", ""];
-    if (isEditText[1]) {
+    if (isEditText.value) {
       result = false;
     } else if (inputEmail.text.trim().isEmpty) {
       listError[1] = "vui lòng không để trống thông tin";
@@ -67,7 +66,7 @@ class RegisterController extends GetxController {
   bool get validatorCode {
     var result = true;
     listError.value = ["", ""];
-    if (isEditText[0]) {
+    if (isLoadUser.value) {
       result = false;
     } else if (inputCode.text.trim().isEmpty) {
       listError[0] = "vui lòng không để trống thông tin";
@@ -90,16 +89,6 @@ class RegisterController extends GetxController {
     } else {
       await registerAccount();
     }
-  }
-
-  void clearData() {
-    inputName.clear();
-    isEditText.value = [false, true];
-    inputEmail.clear();
-    inputCode.clear();
-    _urlImage = null;
-    fileImage.value = File('');
-    update();
   }
 
   Future<void> showModalSheet() async {
@@ -187,8 +176,7 @@ class RegisterController extends GetxController {
     final res = await api.post('/check-user', data: form);
     isLoadUser(false);
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      isEditText[0] = true;
-      isEditText[1] = false;
+      isEditText.value = false;
       inputName.text = res.data['payload'].toString();
     } else {
       Utils.messError(res.data['message']);

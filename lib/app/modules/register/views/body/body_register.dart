@@ -3,7 +3,6 @@ import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:boarding_group/app/modules/register/controllers/register_controller.dart';
 import 'package:boarding_group/app/widget/button/button_loading.dart';
 import 'package:boarding_group/app/widget/button/second_outlined_button.dart';
-import 'package:boarding_group/app/widget/button/second_text_button.dart';
 import 'package:boarding_group/app/widget/custom_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,8 +47,6 @@ class BodyRegister extends StatelessWidget {
                     title: 'Căn cước/chứng minh thư',
                     keyboardType: TextInputType.number,
                     maxLength: 12,
-                    readOnly: _.isEditText[0],
-                    background: showBackgroundInput(_.isEditText[0]),
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     button: Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -57,7 +54,6 @@ class BodyRegister extends StatelessWidget {
                           title: 'Kiểm tra',
                           sizeText: 17,
                           isLoading: _.isLoadUser.value,
-                          background: showBackgroundInput(_.isEditText[0]),
                           height: 49,
                           strokeWidth: 2.7,
                           onPressed: () async => await _.handleCheckUser()),
@@ -68,17 +64,17 @@ class BodyRegister extends StatelessWidget {
                   CustomInput(
                     readOnly: true,
                     controller: _.inputName,
+                    background: kGreyColor400,
                     hintText: 'tên người dùng',
-                    background: showBackgroundInput(_.isEditText[0]),
                     title: '',
                     err: '',
                   ),
                   const SizedBox(height: 15),
                   CustomInput(
                     controller: _.inputEmail,
-                    readOnly: _.isEditText[1],
+                    readOnly: _.isEditText.value,
                     title: 'Tài khoản email',
-                    background: showBackgroundInput(_.isEditText[1]),
+                    background: showBackgroundInput(_.isEditText.value),
                     err: _.listError[1],
                   ),
                   const SizedBox(height: 40),
@@ -86,7 +82,8 @@ class BodyRegister extends StatelessWidget {
                       height: 55,
                       width: 170,
                       sizeContent: 18,
-                      colors: _.isEditText[1] ? kGreyColor400 : kPrimaryColor,
+                      colors:
+                          _.isEditText.value ? kGreyColor400 : kPrimaryColor,
                       isLoading: _.isLoading.value,
                       titleButton: "Đăng ký",
                       onPressed: () async => await _.submit()))

@@ -18,25 +18,6 @@ class Utils {
     }
   }
 
-  static Future<bool> handleListenConnect() async {
-    var result = true;
-    final _log = Logger();
-    StreamSubscription subscription;
-    // kiểm tra kết nối mạng khi bắt đầu vào app
-    if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
-      result = false;
-    }
-    // lắng nghe kết nối mạng bị thay đổi
-    subscription = Connectivity().onConnectivityChanged.listen((changeResult) {
-      if (changeResult == ConnectivityResult.none) {
-        result = false;
-      } else {
-        handleListenConnect();
-      }
-    });
-    return result;
-  }
-
   static void showMessage(
       {required Color color,
       required String text,
