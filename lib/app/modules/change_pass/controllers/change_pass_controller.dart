@@ -22,7 +22,7 @@ class ChangePassController extends GetxController {
   final loadingChange = false.obs;
   final listErrChange = ["", ""].obs;
   final reg =
-      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+      RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9$@!%*?&#^+=-_]$");
 
   final user = UserModel().obs;
   final AuthController authController = Get.find();
@@ -61,10 +61,11 @@ class ChangePassController extends GetxController {
     if (inputPassNew.text.trim().isEmpty) {
       listErrChange[0] = 'thông tin không được để trống';
       result = false;
-    } else if (inputPassNew.text.length > 100) {
-      listErrChange[0] = 'mật khẩu không quá 100 ký tự';
+    } else if (inputPassNew.text.trim().length < 8 ||
+        inputPassNew.text.trim().length > 16) {
+      listErrChange[0] = 'mật khẩu tối thiểu từ 8 đến 16 ký tự';
       result = false;
-    } else if (!reg.hasMatch(inputPassNew.text)) {
+    } else if (!reg.hasMatch(inputPassNew.text.trim())) {
       Utils.messWarning(MSG_FORMAT_PASS);
       result = false;
     }

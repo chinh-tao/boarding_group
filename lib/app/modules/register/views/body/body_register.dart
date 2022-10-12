@@ -22,13 +22,6 @@ class BodyRegister extends StatelessWidget {
     });
   }
 
-  Color? showBackgroundInput(bool value) {
-    if (value) {
-      return kGreyColor400;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -46,18 +39,8 @@ class BodyRegister extends StatelessWidget {
                     controller: _.inputCode,
                     title: 'Căn cước/chứng minh thư',
                     keyboardType: TextInputType.number,
-                    maxLength: 12,
+                    onChanged: (value) => _.handleChangeInputName(value),
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    button: Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: SecondOutlinedButton(
-                          title: 'Kiểm tra',
-                          sizeText: 17,
-                          isLoading: _.isLoadUser.value,
-                          height: 49,
-                          strokeWidth: 2.7,
-                          onPressed: () async => await _.handleCheckUser()),
-                    ),
                     err: _.listError[0],
                   ),
                   const SizedBox(height: 8),
@@ -72,9 +55,7 @@ class BodyRegister extends StatelessWidget {
                   const SizedBox(height: 15),
                   CustomInput(
                     controller: _.inputEmail,
-                    readOnly: _.isEditText.value,
                     title: 'Tài khoản email',
-                    background: showBackgroundInput(_.isEditText.value),
                     err: _.listError[1],
                   ),
                   const SizedBox(height: 40),
@@ -82,8 +63,7 @@ class BodyRegister extends StatelessWidget {
                       height: 55,
                       width: 170,
                       sizeContent: 18,
-                      colors:
-                          _.isEditText.value ? kGreyColor400 : kPrimaryColor,
+                      colors: kPrimaryColor,
                       isLoading: _.isLoading.value,
                       titleButton: "Đăng ký",
                       onPressed: () async => await _.submit()))

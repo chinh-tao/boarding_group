@@ -19,7 +19,8 @@ class CustomInput extends StatelessWidget {
       this.readOnly = false,
       this.hintText = '',
       this.background,
-      this.button})
+      this.button,
+      this.onChanged})
       : super(key: key);
 
   final TextEditingController controller;
@@ -31,6 +32,7 @@ class CustomInput extends StatelessWidget {
   final bool obscureText, readOnly;
   final Widget? icons, button;
   final Function()? onPressed;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class CustomInput extends StatelessWidget {
                 keyboardType: keyboardType ?? TextInputType.visiblePassword,
                 obscureText: obscureText,
                 readOnly: readOnly,
+                onChanged: onChanged,
                 decoration: InputDecoration(
                     fillColor: background,
                     filled: background != null ? true : false,

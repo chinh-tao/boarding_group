@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 //192.168.19.91 (CT)
 //192.168.0.104 (LN)
-const kUrl = 'http://192.168.19.91:8000/mobi';
+const kApiUrlStaging = 'http://192.168.19.91:8000/mobi';
+const kApiUrlProduction = 'https://boarding-group.herokuapp.com/mobi';
 
 const kPrimaryColor = Color(0xff00695c);
 const kBodyText = Color(0xff707070);
@@ -23,7 +24,7 @@ const MSG_SYSTEM_HANDLE =
     'Lỗi trong quá trình xử lý hệ thống. Vui lòng khởi động lại ứng dụng...';
 const MSG_SAVE_FILE = 'Có một lỗi xảy ra trong quá trình lưu file.';
 const MSG_FORMAT_PASS =
-    'mật khẩu không đúng định dạng, mật khẩu chứa ít nhất:\n--> một chữ thường.\n--> một chữ hoa.\n--> một số bất kỳ.\n--> một kí tự.';
+    'Mật khẩu phải ký tự chữ và số bao gồm cả chữ hoa, chữ thường';
 const MSG_NOT_CONNECT =
     "Không có kết nối mạng, vui lòng khởi động lại ứng dụng sau khi kiểm tra kết nối.";
 const MSG_TIME_OUT =

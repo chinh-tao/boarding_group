@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:boarding_group/app/common/api.dart';
@@ -22,13 +23,13 @@ class RegisterController extends GetxController {
   final isLoading = false.obs;
   final isLoadUser = false.obs;
   final listError = ["", ""].obs;
-  final isEditText = true.obs;
 
   final _log = Logger();
   final fileImage = File("").obs;
   final AuthController authController = Get.find();
 
   String? _urlImage;
+  Timer? time;
 
   @override
   void onInit() {
@@ -47,12 +48,18 @@ class RegisterController extends GetxController {
     super.onClose();
   }
 
-  bool get validatorRegister {
+  bool get validator {
     var result = true;
     listError.value = ["", ""];
-    if (isEditText.value) {
+
+    if (inputCode.text.trim().isEmpty) {
+      listError[0] = "vui lòng không để trống thông tin";
       result = false;
-    } else if (inputEmail.text.trim().isEmpty) {
+    } else if (inputCode.text.trim().length < 12) {
+      listError[0] = "không khớp với định dạng";
+      result = false;
+    }
+    if (inputEmail.text.trim().isEmpty) {
       listError[1] = "vui lòng không để trống thông tin";
       result = false;
     } else if (!inputEmail.text.isEmail) {
@@ -63,24 +70,8 @@ class RegisterController extends GetxController {
     return result;
   }
 
-  bool get validatorCode {
-    var result = true;
-    listError.value = ["", ""];
-    if (isLoadUser.value) {
-      result = false;
-    } else if (inputCode.text.trim().isEmpty) {
-      listError[0] = "vui lòng không để trống thông tin";
-      result = false;
-    } else if (inputCode.text.trim().length < 12) {
-      listError[0] = "không khớp với định dạng";
-      result = false;
-    }
-    update();
-    return result;
-  }
-
   Future<void> submit() async {
-    if (!validatorRegister) return;
+    if (!validator) return;
     isLoading.value = true;
     update();
     if (fileImage.value.path != '') {
@@ -169,18 +160,24 @@ class RegisterController extends GetxController {
     update();
   }
 
-  Future<void> handleCheckUser() async {
-    if (!validatorCode) return;
-    final form = {"id": inputCode.text};
-    isLoadUser(true);
+  Future<void> handleCheckUser(String value) async {
+    final form = {"id": value};
+    //isLoadUser(true);
     final res = await api.post('/check-user', data: form);
-    isLoadUser(false);
+    //isLoadUser(false);
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      isEditText.value = false;
       inputName.text = res.data['payload'].toString();
+    } else if (res.data['code'] == 400) {
+      inputName.clear();
     } else {
       Utils.messError(res.data['message']);
     }
     update();
+  }
+
+  void handleChangeInputName(String value) {
+    time = Timer(const Duration(milliseconds: 200), () {
+      handleCheckUser(value);
+    });
   }
 }

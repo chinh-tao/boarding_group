@@ -4,7 +4,6 @@ import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
-import 'package:boarding_group/app/widget/body/forgot_pass.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';

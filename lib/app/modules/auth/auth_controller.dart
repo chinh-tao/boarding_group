@@ -65,12 +65,11 @@ class AuthController extends GetxController {
     final form = {"device_mobi": device.value};
     final res = await api.get('/check-device', queryParameters: form);
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      final dataUser = res.data['payload']['data_user'];
+      final dataUser = res.data['payload']['data_user'] as List;
       final hasDevice = res.data['payload']['has_device'] as bool;
-      if (dataUser != null) {
-        final convertList = dataUser as List;
+      if (dataUser.isNotEmpty) {
         listUser.value =
-            convertList.map((data) => UserModel.fromJson(data)).toList();
+            dataUser.map((data) => UserModel.fromJson(data)).toList();
         Get.offNamed(Routes.LIST_ACCOUNT);
       } else {
         if (!hasDevice) {
