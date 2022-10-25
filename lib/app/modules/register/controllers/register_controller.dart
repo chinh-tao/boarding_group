@@ -145,7 +145,8 @@ class RegisterController extends GetxController {
     };
     isLoading.value = true;
     final res = await api.post('/register',
-        data: form, options: dio.Options(contentType: 'multipart/form-data'));
+        data: form,
+        options: dio.Options(contentType: 'application/x-www-form-urlencoded'));
     isLoading.value = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
       // if (fileImage.value.path != '') {
