@@ -19,7 +19,7 @@ class CustomInterceptors extends Interceptor {
       Utils.messWarning(MSG_NOT_CONNECT);
       return;
     }
-    options.baseUrl = kApiUrlProduction;
+    options.baseUrl = kApiUrlStaging;
     _log.i(
         'TYPE: Request,\nPATH: ${options.path},\nMETHOD: ${options.method},\nDATA: ${options.data}');
     super.onRequest(options, handler);

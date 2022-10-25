@@ -7,6 +7,7 @@ import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/utils/utils.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +29,6 @@ class RegisterController extends GetxController {
   final fileImage = File("").obs;
   final AuthController authController = Get.find();
 
-  String? _urlImage;
   Timer? time;
 
   @override
@@ -72,14 +72,7 @@ class RegisterController extends GetxController {
 
   Future<void> submit() async {
     if (!validator) return;
-    isLoading.value = true;
-    update();
-    if (fileImage.value.path != '') {
-      await handleAddImageToStore();
-      if (!['', null].contains(_urlImage)) await registerAccount();
-    } else {
-      await registerAccount();
-    }
+    await registerAccount();
   }
 
   Future<void> showModalSheet() async {
@@ -95,7 +88,6 @@ class RegisterController extends GetxController {
               pickerImage: () => handlePickerImage(ImageSource.gallery),
               removeAvatar: () {
                 Get.back();
-                _urlImage = null;
                 fileImage.value = File('');
                 update();
               });
@@ -128,43 +120,64 @@ class RegisterController extends GetxController {
     }
   }
 
-  Future<void> handleAddImageToStore() async {
+  Future<String> get getUrlImage async {
+    var urlImage = '';
     try {
       Reference ref = authController.storage
           .refFromURL('gs://boarding-group.appspot.com')
           .child(inputCode.text);
       UploadTask task = ref.putFile(fileImage.value);
-      _urlImage = await task.snapshot.ref.getDownloadURL();
+      urlImage = await task.snapshot.ref.getDownloadURL();
     } catch (err) {
-      isLoading.value = false;
-      update();
       _log.e('Fire Store: $err');
       Utils.messWarning(MSG_SAVE_FILE);
     }
+    return urlImage;
   }
 
   Future<void> registerAccount() async {
     final form = <String, dynamic>{
       "id": inputCode.text,
       "email": inputEmail.text,
-      "images": _urlImage,
+      "images": await dio.MultipartFile.fromFile(fileImage.value.path,
+          filename: inputCode.text),
       "device_mobi": authController.device.value
     };
-    final res = await api.post('/register', data: form);
+    isLoading.value = true;
+    final res = await api.post('/register',
+        data: form, options: dio.Options(contentType: 'multipart/form-data'));
     isLoading.value = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
+      // if (fileImage.value.path != '') {
+      //   handeSaveImage();
+      // } else {
       Get.offNamed(Routes.LOGIN, parameters: {'category': '0'});
+      // }
     } else {
       Utils.messError(res.data['message']);
     }
     update();
   }
 
+  void handeSaveImage() async {
+    var url = await getUrlImage;
+    print(url);
+    if (url != '') {
+      final res = await api.post('/register', data: {"images": url});
+      if (res.statusCode == 200 && res.data['code'] == 0) {
+        print('success');
+      }
+      //Get.offNamed(Routes.LOGIN, parameters: {'category': '0'});
+    } else {
+      while (url != '') {
+        handeSaveImage();
+      }
+    }
+  }
+
   Future<void> handleCheckUser(String value) async {
     final form = {"id": value};
-    //isLoadUser(true);
     final res = await api.post('/check-user', data: form);
-    //isLoadUser(false);
     if (res.statusCode == 200 && res.data['code'] == 0) {
       inputName.text = res.data['payload'].toString();
     } else if (res.data['code'] == 400) {
