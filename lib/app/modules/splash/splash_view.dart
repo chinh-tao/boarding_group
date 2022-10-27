@@ -44,10 +44,10 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
             child: Image.asset('assets/images/logo.png', height: 300),
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         Text("Boarding Group",
             textAlign: TextAlign.center,
-            style: PrimaryStyle.bold(32, color: kPrimaryColor))
+            style: PrimaryStyle.bold(52, color: kPrimaryColor))
       ]),
     );
   }
