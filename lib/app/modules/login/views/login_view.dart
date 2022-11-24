@@ -113,15 +113,15 @@ final icons = Provider.autoDispose<IconData>((ref) {
 
 final images = Provider.autoDispose<Widget>((ref) {
   if (ref.watch(_controller).arguments['category'] == '1') {
-    return CustomImage(
-        width: 200,
-        height: 200,
-        url: ref.watch(_controller).userModel.images!,
-        errorWidget: CustomImageDefault(
-            sizeText: 90,
-            height: 200,
-            width: 200,
-            content: ref.watch(_controller).userModel.userName![0]));
+    if (ref.watch(_controller).userModel.images != null) {
+      return CustomImage(
+          width: 200,
+          height: 200,
+          url: ref.watch(_controller).userModel.images!,
+          errorWidget: const CustomImageDefault(height: 200, width: 200));
+    }
+    return const CustomImageDefault(
+        height: 200, width: 200, iconSize: 150, backgroundColor: kGreyColor400);
   }
   return Image.asset('assets/images/logo.png', height: 200);
 });

@@ -65,12 +65,8 @@ class BodyListAccount extends ConsumerWidget {
                                     .watch(controller)
                                     .listUser[index]
                                     .getImages,
-                                errorWidget: CustomImageDefault(
-                                    backgroundColor: kGreyColor400,
-                                    content: ref
-                                        .watch(controller)
-                                        .listUser[index]
-                                        .userName![0])),
+                                errorWidget: const CustomImageDefault(
+                                    backgroundColor: kGreyColor400)),
                             const SizedBox(width: 10),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

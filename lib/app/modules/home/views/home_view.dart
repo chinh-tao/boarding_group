@@ -133,11 +133,8 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
                     url: listMember.getImages,
                     shape: BoxShape.rectangle,
                     errorWidget: CustomImageDefault(
-                        sizeText: 40,
                         backgroundColor: kOrangeColor800.withOpacity(0.8),
-                        shape: BoxShape.rectangle,
-                        content: Utils.getSubStringUserName(
-                            listMember.getUserName))),
+                        shape: BoxShape.rectangle)),
               ),
               const SizedBox(width: 13),
               Expanded(
