@@ -29,6 +29,7 @@ class LoginController extends ChangeNotifier {
     if (arguments['category'] == '1') {
       userModel = arguments['user'];
       inputEmail.text = userModel.email!;
+      inputPass.text = 'luanlq@123';
     }
     notifyListeners();
   }
