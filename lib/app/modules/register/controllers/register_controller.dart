@@ -4,51 +4,35 @@ import 'dart:io';
 
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
-import 'package:boarding_group/app/modules/auth/auth_controller.dart';
+import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
-import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
-class RegisterController extends GetxController {
+import '../../../common/auth.dart';
+
+class RegisterController extends ChangeNotifier {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputCode = TextEditingController();
   TextEditingController inputName = TextEditingController();
 
-  final isLoadImage = false.obs;
-  final isLoading = false.obs;
-  final listError = ["", ""].obs;
+  final isLoadImage = false;
+  var isLoading = false;
+  var listError = ["", ""];
 
   final _log = Logger();
-  final fileImage = File("").obs;
-  final AuthController authController = Get.find();
+  var fileImage = File("");
 
   Timer? time;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    inputEmail.dispose();
-    inputCode.dispose();
-    super.onClose();
-  }
-
   bool get validator {
     var result = true;
-    listError.value = ["", ""];
+    listError = ["", ""];
 
     if (inputCode.text.trim().isEmpty) {
       listError[0] = "vui lòng không để trống thông tin";
@@ -60,17 +44,17 @@ class RegisterController extends GetxController {
     if (inputEmail.text.trim().isEmpty) {
       listError[1] = "vui lòng không để trống thông tin";
       result = false;
-    } else if (!inputEmail.text.isEmail) {
+    } else if (!regexEmail.hasMatch(inputEmail.text.trim())) {
       listError[1] = "địa chỉ email không hợp lệ";
       result = false;
     }
-    update();
+    notifyListeners();
     return result;
   }
 
-  Future<void> submit() async {
+  void submit(WidgetRef ref) async {
     if (!validator) return;
-    await registerAccount();
+    await registerAccount(ref);
   }
 
   Future<void> showModalSheet() async {
@@ -78,28 +62,28 @@ class RegisterController extends GetxController {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        context: Get.context!,
+        context: navKey.currentContext!,
         constraints: const BoxConstraints(maxHeight: 150),
         builder: (context) {
           return BodyBottomSheet(
               imageCamera: () => handlePickerImage(ImageSource.camera),
               pickerImage: () => handlePickerImage(ImageSource.gallery),
               removeAvatar: () {
-                Get.back();
-                fileImage.value = File('');
-                update();
+                Navigator.of(context).pop();
+                fileImage = File('');
+                notifyListeners();
               });
         });
   }
 
   Future<void> handlePickerImage(ImageSource source) async {
-    Get.back();
+    Navigator.of(navKey.currentContext!).pop();
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image != null) {
-        fileImage.value = File(image.path);
+        fileImage = File(image.path);
       }
-      update();
+      notifyListeners();
     } on PlatformException catch (err) {
       _log.e("Image: $err");
       Utils.messWarning(MSG_SYSTEM_HANDLE);
@@ -110,37 +94,39 @@ class RegisterController extends GetxController {
     final LostDataResponse res = await ImagePicker().retrieveLostData();
     if (res.isEmpty) return;
     if (res.file != null) {
-      fileImage.value = File(res.file!.path);
-      update();
+      fileImage = File(res.file!.path);
+      notifyListeners();
     } else {
       _log.e("Image(retrieveLostData): ${res.exception!.code}");
       Utils.messWarning(MSG_SYSTEM_HANDLE);
     }
   }
 
-  Future<void> registerAccount() async {
+  Future<void> registerAccount(WidgetRef ref) async {
     final form = <String, dynamic>{
       "id": inputCode.text,
       "email": inputEmail.text,
-      "device_mobi": authController.device.value
+      "device_mobi": ref.watch(Auth.device)
     };
-    if (fileImage.value.path != '') {
-      final filedName = fileImage.value.path.split('/').last;
+    if (fileImage.path != '') {
+      final filedName = fileImage.path.split('/').last;
       final typeFiled = filedName.split('.').last;
       form["images"] = {
-        "file": base64Encode(fileImage.value.readAsBytesSync()),
+        "file": base64Encode(fileImage.readAsBytesSync()),
         "type": typeFiled
       };
     }
-    isLoading.value = true;
+    isLoading = true;
     final res = await api.post('/register', data: form);
-    isLoading.value = false;
+    isLoading = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      Get.offNamed(Routes.LOGIN, parameters: {'category': '0'});
+      Navigator.of(navKey.currentContext!).pushNamedAndRemoveUntil(
+          Routes.LOGIN, (route) => false,
+          arguments: {'category': '0'});
     } else {
       Utils.messError(res.data['message']);
     }
-    update();
+    notifyListeners();
   }
 
   Future<void> handleCheckUser(String value) async {
@@ -153,7 +139,7 @@ class RegisterController extends GetxController {
     } else {
       Utils.messError(res.data['message']);
     }
-    update();
+    notifyListeners();
   }
 
   void handleChangeInputName(String value) {

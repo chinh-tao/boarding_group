@@ -1,7 +1,7 @@
 import 'package:boarding_group/app/common/config.dart';
+import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ItemBottomSheet extends StatelessWidget {
   const ItemBottomSheet(
@@ -25,7 +25,7 @@ class ItemBottomSheet extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: Get.width,
+        width: size.width,
         padding:
             EdgeInsets.symmetric(vertical: paddingVertical, horizontal: 15),
         child: Row(

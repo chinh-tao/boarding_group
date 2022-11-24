@@ -24,7 +24,7 @@ const MSG_SYSTEM_HANDLE =
     'Lỗi trong quá trình xử lý hệ thống. Vui lòng khởi động lại ứng dụng...';
 const MSG_SAVE_FILE = 'Có một lỗi xảy ra trong quá trình lưu file.';
 const MSG_FORMAT_PASS =
-    'Mật khẩu phải ký tự chữ và số bao gồm cả chữ hoa, chữ thường';
+    'Mật khẩu phải có ký tự chữ và số bao gồm cả chữ hoa, chữ thường';
 const MSG_NOT_CONNECT =
     "Không có kết nối mạng, vui lòng khởi động lại ứng dụng sau khi kiểm tra kết nối.";
 const MSG_TIME_OUT =

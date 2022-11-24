@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../common/config.dart';
 import '../../../../common/primary_style.dart';
-import '../../../../routes/app_pages.dart';
 import '../../controllers/list_account_controller.dart';
 
-class CustomMenu extends StatelessWidget {
+class CustomMenu extends ConsumerWidget {
   const CustomMenu({Key? key}) : super(key: key);
 
   Widget itemMenu(
@@ -51,37 +50,37 @@ class CustomMenu extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GetX<ListAccountController>(builder: (_) {
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          if (_.isHideMenu.value) ...[
-            itemMenu(
-                content: "Thêm tài khoản",
-                icon: Icons.add,
-                onPressed: () {
-                  _.isHideMenu(false);
-                  Get.toNamed(Routes.LOGIN, parameters: {'category': '2'});
-                },
-                paddingWidth: 3,
-                bottom: 70),
-            itemMenu(
-                content: "Quên mật khẩu",
-                icon: Icons.pin_rounded,
-                onPressed: () => _.showForgotPass(),
-                paddingWidth: 5,
-                bottom: 120),
-            itemMenu(bottom: 0, onPressed: () => _.isHideMenu(false)),
-          ] else ...[
-            FloatingActionButton(
-              backgroundColor: kOrangeColor800,
-              onPressed: () => _.isHideMenu(true),
-              child: const Icon(Icons.menu, color: kWhiteColor, size: 27),
-            )
-          ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        if (ref.watch(_controller).isHideMenu) ...[
+          itemMenu(
+              content: "Thêm tài khoản",
+              icon: Icons.add,
+              onPressed: () => ref.read(_controller.notifier).handleShowPage(),
+              paddingWidth: 3,
+              bottom: 70),
+          itemMenu(
+              content: "Quên mật khẩu",
+              icon: Icons.pin_rounded,
+              onPressed: () => ref.read(_controller.notifier).showForgotPass(),
+              paddingWidth: 5,
+              bottom: 120),
+          itemMenu(
+              bottom: 0,
+              onPressed: () => ref.read(_controller.notifier).handleClose()),
+        ] else ...[
+          FloatingActionButton(
+            backgroundColor: kOrangeColor800,
+            onPressed: () => ref.read(_controller.notifier).handleOpen(),
+            child: const Icon(Icons.menu, color: kWhiteColor, size: 27),
+          )
         ],
-      );
-    });
+      ],
+    );
   }
 }
+
+final _controller = ChangeNotifierProvider<ListAccountController>(
+    (ref) => ListAccountController());

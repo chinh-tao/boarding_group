@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:boarding_group/app/common/config.dart';
-import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/common/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -20,6 +20,7 @@ class CustomInterceptors extends Interceptor {
       return;
     }
     options.baseUrl = kApiUrlStaging;
+    options.headers['id_branch'] = 'B001';
     _log.i(
         'TYPE: Request,\nPATH: ${options.path},\nMETHOD: ${options.method},\nDATA: ${options.data}');
     super.onRequest(options, handler);

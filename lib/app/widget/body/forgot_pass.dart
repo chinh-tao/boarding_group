@@ -1,5 +1,5 @@
+import 'package:boarding_group/app/common/global.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../common/config.dart';
 import '../button/button_loading.dart';
@@ -22,7 +22,7 @@ class ForgotPass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Get.width,
+      width: size.width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

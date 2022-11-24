@@ -1,61 +1,55 @@
 import 'package:boarding_group/app/common/api.dart';
+import 'package:boarding_group/app/common/auth.dart';
+import 'package:boarding_group/app/common/global.dart';
+import 'package:boarding_group/app/model/admin_model.dart';
 import 'package:boarding_group/app/model/user_model.dart';
-import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
-import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-class LoginController extends GetxController with GetTickerProviderStateMixin {
+class LoginController extends ChangeNotifier {
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPass = TextEditingController();
 
-  final userModel = UserModel().obs;
-  final isLoadingLogin = false.obs;
-  final listErrLogin = ["", ""].obs;
-  final isHidePass = true.obs;
-  final forgotPassErr = "".obs;
+  var arguments = <String, dynamic>{};
+  var userModel = UserModel();
+  var isLoading = false;
+  var listErrLogin = ["", ""];
+  var isHidePass = true;
 
   final _log = Logger();
-  final AuthController authController = Get.find();
-  late final AnimationController _aniController =
-      AnimationController(duration: const Duration(seconds: 2), vsync: this)
-        ..repeat(reverse: false);
-  late final Animation<double> animation =
-      CurvedAnimation(parent: _aniController, curve: Curves.slowMiddle);
 
-  @override
-  void onInit() {
-    initData();
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void initData() async {
-    if (Get.parameters['category'] == '1') {
-      userModel.value = Get.arguments['user'];
-      inputEmail.text = userModel.value.email!;
+  void initData(context) {
+    clearDataLogin();
+    arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    if (arguments['category'] == '1') {
+      userModel = arguments['user'];
+      inputEmail.text = userModel.email!;
     }
+    notifyListeners();
+  }
+
+  void close() {
+    inputEmail.clear();
+    inputPass.clear();
+    arguments = <String, dynamic>{};
+    userModel = UserModel();
+    isLoading = false;
+    listErrLogin = ["", ""];
+    isHidePass = true;
   }
 
   bool get validatorLogin {
     var result = true;
-    listErrLogin.value = ["", ""];
+    listErrLogin = ["", ""];
     if (inputEmail.text.trim().isEmpty) {
       listErrLogin[0] = 'thông tin không được để trống';
       result = false;
-    } else if (!inputEmail.text.isEmail) {
+    } else if (!regexEmail.hasMatch(inputEmail.text.trim())) {
       listErrLogin[0] = 'email không đúng định dạng';
       result = false;
     }
@@ -66,27 +60,33 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
       listErrLogin[1] = 'mật khẩu không lớn quá 8 kí tự';
       result = false;
     }
+    notifyListeners();
     return result;
   }
 
-  Future<void> submit() async {
+  Future<void> submit(WidgetRef ref) async {
     if (!validatorLogin) return;
 
     final form = {
       "email": inputEmail.text,
       "pass": inputPass.text,
-      "device_mobi": authController.device.value
+      "device_mobi": ref.watch(Auth.device)
     };
-    isLoadingLogin.value = true;
+    isLoading = true;
     final res = await api.post('/login', data: form);
-    isLoadingLogin.value = false;
+    isLoading = false;
 
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      authController.user.value = UserModel.fromJson(res.data['payload']);
-      Get.offAllNamed(Routes.HOME);
+      ref.read(Auth.user.notifier).state =
+          UserModel.fromJson(res.data['payload']['infor_user']);
+      ref.read(Auth.admin.notifier).state =
+          AdminModel.fromJson(res.data['payload']);
+      Navigator.of(navKey.currentContext!)
+          .pushNamedAndRemoveUntil(Routes.ROOT, (route) => false);
     } else {
       Utils.messError(res.data['message']);
     }
+    notifyListeners();
   }
 
   void clearDataLogin() {
@@ -96,12 +96,17 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
 
   void showForgotPass() {
     showDialog(
-        context: Get.context!,
+        context: navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               content: const ForgotPassView());
         });
+  }
+
+  void handleShowPass() {
+    isHidePass = !isHidePass;
+    notifyListeners();
   }
 }

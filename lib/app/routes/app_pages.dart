@@ -1,18 +1,17 @@
-import 'package:get/get.dart';
+import 'package:boarding_group/app/modules/bill/view/detail_bill_view.dart';
+import 'package:boarding_group/app/modules/bill/view/list_bill_view.dart';
+import 'package:boarding_group/app/modules/incident/view/add_incident_view.dart';
+import 'package:boarding_group/app/modules/incident/view/list_incident_view.dart';
+import 'package:boarding_group/app/modules/notification/view/notice_view.dart';
+import 'package:boarding_group/app/modules/root_page/view/root_view.dart';
+import 'package:boarding_group/app/modules/service/view/service_view.dart';
+import 'package:boarding_group/app/modules/user/view/detail_user_view.dart';
 
-import '../modules/auth/auth_binding.dart';
-import '../modules/change_pass/bindings/change_pass_binding.dart';
-import '../modules/forgot_pass/bindings/forgot_pass_binding.dart';
-import '../modules/forgot_pass/views/forgot_pass_view.dart';
-import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/login/bindings/list_account_binding.dart';
-import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/list_account_view.dart';
 import '../modules/login/views/login_view.dart';
-import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
-import '../modules/splash/splash_view.dart';
+import '../modules/splash/view/splash_view.dart';
 
 part 'app_routes.dart';
 
@@ -21,28 +20,19 @@ class AppPages {
 
   static const INITIAL = Routes.SPLASH;
 
-  static final routes = [
-    GetPage(
-        name: _Paths.HOME,
-        page: () => const HomeView(),
-        binding: HomeBinding()),
-    GetPage(
-        name: _Paths.LOGIN,
-        page: () => const LoginView(),
-        binding: LoginBinding(),
-        bindings: [ForgotPassBinding()]),
-    GetPage(
-        name: _Paths.REGISTER,
-        page: () => const RegisterView(),
-        binding: RegisterBinding()),
-    GetPage(
-        name: _Paths.SPLASH,
-        page: () => const SplashView(),
-        binding: AuthBinding()),
-    GetPage(
-        name: _Paths.LIST_ACCOUNT,
-        page: () => const ListAccountView(),
-        binding: ListAccountBinding(),
-        bindings: [ForgotPassBinding()])
-  ];
+  static final routes = {
+    Routes.SPLASH: (_) => const SplashView(),
+    Routes.LOGIN: (_) => const LoginView(),
+    Routes.REGISTER: (_) => const RegisterView(),
+    Routes.LIST_ACCOUNT: (_) => const ListAccountView(),
+    Routes.HOME: (_) => const HomeView(),
+    Routes.NOTIFICATION: (_) => const NoticeView(),
+    Routes.LIST_BILL: (_) => const ListBillView(),
+    Routes.DETAIL_BILL: (_) => const DetailBillView(),
+    Routes.LIST_INCIDENT: (_) => const ListIncidentView(),
+    Routes.ADD_INCIDENT: (_) => const AddIncidentView(),
+    Routes.DETAIL_USER: (_) => const DetailUserView(),
+    Routes.ROOT: (_) => const RootView(),
+    Routes.SERVICE: (_) => const ServiceView()
+  };
 }

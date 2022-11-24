@@ -1,191 +1,61 @@
-import 'package:boarding_group/app/modules/auth/auth_controller.dart';
+import 'dart:async';
+
+import 'package:boarding_group/app/common/api.dart';
+import 'package:boarding_group/app/common/utils.dart';
+import 'package:boarding_group/app/model/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../../model/player.dart';
-import '../../../utils/utils.dart';
+class HomeController extends ChangeNotifier {
+  TextEditingController inputRoom = TextEditingController();
+  TextEditingController inputName = TextEditingController();
 
-class HomeController extends GetxController {
-  final AuthController authController = Get.find();
+  Timer? timer;
   final _log = Logger();
+  var isLoading = false;
+  var listMember = <UserModel>[];
 
-  final listData = <List<String>>[].obs;
-  final listColor = [].obs;
-  final count = 16.obs;
-  final changeValue = ''.obs;
-  final isSuccess = ''.obs;
-  final listCount = <int>[0, 0, 0, 0];
-
-  @override
-  void onInit() {
-    initData();
-    super.onInit();
+  void initData(WidgetRef ref) async {
+    await getListMember(ref);
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void handleSearchName(String value, WidgetRef ref) {
+    if (timer?.isActive ?? false) timer!.cancel();
+    inputName.value = TextEditingValue(
+        text: value, selection: TextSelection.collapsed(offset: value.length));
+    timer = Timer(const Duration(seconds: 1), () async {
+      await getListMember(ref);
+    });
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  void handleSearchRoom(String value, WidgetRef ref) {
+    if (timer?.isActive ?? false) timer!.cancel();
+    inputRoom.value = TextEditingValue(
+        text: value, selection: TextSelection.collapsed(offset: value.length));
+    timer = Timer(const Duration(seconds: 1), () async {
+      await getListMember(ref);
+    });
   }
 
-  void initData() {
-    handleClearData();
-    _log.i("TYPE: Auth,\nDATA: ${authController.user.value.id}");
-    update();
-  }
-
-  void showData(int position, int index) {
-    if (listData[position][index].isEmpty) {
-      final result = changeValue.value == Player.X ? Player.O : Player.X;
-      changeValue.value = result;
-      listData[position][index] = result;
-      getBoxColor(position, index);
-
-      if (handleWinner(position, index)) {
-        showMessagePopup(
-            getColorsBackGround, "Player ${changeValue.value} won!");
-      } else if (handleEnd()) {
-        showMessagePopup(Color(0xffffff9800), "The game is tied!!");
+  Future<void> getListMember(WidgetRef ref, {bool isRefresh = false}) async {
+    final form = <String, dynamic>{};
+    if (inputName.text.isNotEmpty) form['user_name'] = inputName.text.trim();
+    if (inputRoom.text.isNotEmpty) form['room_number'] = inputRoom.text.trim();
+    if (!isRefresh) isLoading = true;
+    notifyListeners();
+    final res = await api.get('/list-member', queryParameters: form);
+    if (!isRefresh) isLoading = false;
+    if (res.statusCode == 200) {
+      if (res.data['code'] == 0) {
+        final convert = res.data['payload'] as List;
+        listMember = convert.map((data) => UserModel.fromJson(data)).toList();
+      } else {
+        listMember.clear();
       }
-      update();
+      notifyListeners();
+    } else {
+      Utils.messError(res.data['message']);
     }
-  }
-
-  void showMessagePopup(Color color, String content) {
-    Utils.showMessage(
-        text: content,
-        color: color,
-        alignment: Alignment.centerLeft,
-        onPressed: () {
-          handleClearData();
-          Get.back();
-        });
-  }
-
-  void getBoxColor(int position, int index) {
-    if (changeValue.value == Player.O) {
-      listColor[position][index] = Colors.blue;
-    } else if (changeValue.value == Player.X) {
-      listColor[position][index] = Colors.redAccent;
-    }
-    update();
-  }
-
-  bool handleWinner(int position, int index) {
-    var result = 0, count1 = 0, count2 = 0;
-    final player = listData[position][index];
-    final max = count.value - 1;
-
-    //hàng cùng giá trị
-    count1 = index;
-    //1.lọc giá trị từ trái sang phải
-    while (listData[position][count1] == player) {
-      result++;
-      if (count1 == max) break;
-      count1++;
-    }
-
-    //2.lọc giá trị từ phải sang trái
-    if (index != 0) {
-      count1 = index - 1;
-      while (listData[position][count1] == player) {
-        result++;
-        if (count1 == 0) break;
-        count1--;
-      }
-    }
-    if (result == 5) return true;
-
-    //cột cùng giá trị
-    result = 0;
-    count1 = position;
-    //1.lọc giá trị từ trên xuống
-    while (listData[count1][index] == player) {
-      result++;
-      if (count1 == max) break;
-      count1++;
-    }
-
-    //2.lọc giá trị từ dưới lên
-    if (position != 0) {
-      count1 = position - 1;
-      while (listData[count1][index] == player) {
-        result++;
-        if (count1 == 0) break;
-        count1--;
-      }
-    }
-    if (result == 5) return true;
-
-    //Đường chéo trái cùng giá trị
-    //note: hướng lọc giá trị tương tự phần cột
-    result = 0;
-    count1 = position;
-    count2 = index;
-    while (listData[count1][count2] == player) {
-      result++;
-      if (count1 == max || count2 == max) break;
-      count1++;
-      count2++;
-    }
-
-    if (position != 0) count1 = position - 1;
-    if (index != 0) count2 = index - 1;
-    while (listData[count1][count2] == player) {
-      result++;
-      if (count1 == 0 || count2 == 0) break;
-      count1--;
-      count2--;
-    }
-    if (result == 5) return true;
-
-    //Đường chéo phải cùng giá trị
-    //note: hướng lọc giá trị tương tự phần cột
-    result = 0;
-    count1 = position;
-    count2 = index;
-    while (listData[count1][count2] == player) {
-      result++;
-      if (count1 == max || count2 == 0) break;
-      count1++;
-      count2--;
-    }
-
-    if (position != 0) count1 = position - 1;
-    if (index != max) count2 = index + 1;
-    while (listData[count1][count2] == player) {
-      result++;
-      if (count1 == 0 || count2 == max) break;
-      count1--;
-      count2++;
-    }
-    if (result == 5) return true;
-
-    return false;
-  }
-
-  bool handleEnd() =>
-      listData.every((values) => values.every((value) => value != ''));
-
-  void handleClearData() {
-    isSuccess.value = '';
-    changeValue.value = '';
-    listData.value = List.generate(
-        count.value, (_) => List.generate(count.value, (_) => ""));
-    listColor.value = List.generate(
-        count.value, (_) => List.generate(count.value, (_) => Colors.white));
-    update();
-  }
-
-  Color get getColorsBackGround {
-    if (changeValue.value == Player.O) {
-      return Color(0xffff03a9f4);
-    }
-    return Color(0xffffef5350);
   }
 }

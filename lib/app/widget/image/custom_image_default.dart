@@ -10,24 +10,24 @@ class CustomImageDefault extends StatelessWidget {
       this.width = 80,
       this.backgroundColor = kBlackColor900,
       this.textColor = kWhiteColor,
-      this.sizeText = 35})
+      this.sizeText = 35,
+      this.shape})
       : super(key: key);
 
   final String content;
   final double? height, width, sizeText;
   final Color? backgroundColor, textColor;
+  final BoxShape? shape;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: height,
       width: width,
-      child: CircleAvatar(
-        backgroundColor: backgroundColor,
-        radius: 80,
-        child: Text(content.toUpperCase(),
-            style: PrimaryStyle.bold(sizeText!, color: textColor)),
-      ),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: backgroundColor, shape: shape ?? BoxShape.circle),
+      child: const Icon(Icons.person, size: 70, color: kWhiteColor),
     );
   }
 }

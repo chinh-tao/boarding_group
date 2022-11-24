@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/custom_interceptor.dart';
-import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/common/global.dart';
+import 'package:boarding_group/app/common/utils.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 import 'app/routes/app_pages.dart';
@@ -35,25 +36,26 @@ void main() async {
           ],
           retries: 3)
     ]);
-    runApp(const MyApp());
+    runApp(const ProviderScope(child: MyApp()));
   }, (err, stackTrace) {
     _log.e("App Error: $err");
     _log.d("StackTrace: $stackTrace");
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => Utils.handleUnfocus(),
-      child: GetMaterialApp(
+      child: MaterialApp(
+        navigatorKey: navKey,
         debugShowCheckedModeBanner: false,
         title: "CARO",
         initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes,
+        routes: AppPages.routes,
         theme: ThemeData(
             textTheme: Theme.of(context)
                 .textTheme

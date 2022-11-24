@@ -3,7 +3,6 @@ import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/widget/item/item_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class BodyBottomSheet extends StatelessWidget {
   const BodyBottomSheet(
@@ -23,9 +22,9 @@ class BodyBottomSheet extends StatelessWidget {
             icon: Icons.privacy_tip,
             paddingVertical: 10,
             onTap: () {
-              Get.back();
-              Get.toNamed(Routes.LOGIN,
-                  parameters: {'category': '1'}, arguments: {'user': user});
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed(Routes.LOGIN,
+                  arguments: {'category': '1', 'user': user});
             }),
         ItemBottomSheet(
             content: 'Xoá tài khoản trên thiết bị này',

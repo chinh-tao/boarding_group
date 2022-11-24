@@ -1,93 +1,80 @@
 import 'package:boarding_group/app/common/api.dart';
+import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/model/user_model.dart';
-import 'package:boarding_group/app/modules/auth/auth_controller.dart';
 import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/modules/login/views/body/body_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
-import 'package:boarding_group/app/utils/utils.dart';
+import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-class ListAccountController extends GetxController
-    with GetTickerProviderStateMixin {
-  final forgotPassErr = "".obs;
-  final isLoading = false.obs;
-  final isHideMenu = false.obs;
+import '../../../common/auth.dart';
+
+class ListAccountController extends ChangeNotifier {
+  final forgotPassErr = "";
+  var isLoading = false;
+  var isHideMenu = false;
+  var listUser = <UserModel>[];
 
   final _log = Logger();
-  final AuthController authController = Get.find();
-  late final AnimationController _aniController =
-      AnimationController(duration: const Duration(seconds: 2), vsync: this)
-        ..repeat(reverse: false);
-  late final Animation<double> animation =
-      CurvedAnimation(parent: _aniController, curve: Curves.slowMiddle);
 
-  @override
-  void onInit() {
-    super.onInit();
+  void initData(context) {
+    listUser = ModalRoute.of(context)!.settings.arguments as List<UserModel>;
+    notifyListeners();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    _aniController.dispose();
-    super.onClose();
-  }
-
-  void showBottomSheet(UserModel user) {
+  void showBottomSheet(int index, WidgetRef ref) {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        context: Get.context!,
+        context: navKey.currentContext!,
         constraints: const BoxConstraints(maxHeight: 110), //110
         builder: (context) {
           return BodyBottomSheet(
               removeAccount: () async {
-                Get.back();
-                showRemoveAccount(user);
+                Navigator.of(context).pop();
+                showRemoveAccount(index, ref);
               },
-              user: user);
+              user: listUser[index]);
         });
   }
 
-  Future<void> handleRemoveAccount(String email) async {
-    final form = {'email': email, 'device_mobi': authController.device.value};
+  Future<void> handleRemoveAccount(String email, WidgetRef ref) async {
+    final form = {'email': email, 'device_mobi': ref.watch(Auth.device)};
 
-    isLoading(true);
+    isLoading = true;
     final res = await api.delete('/remove-account', data: form);
-    isLoading(false);
+    isLoading = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      authController.listUser
-          .removeWhere((data) => data.email!.contains(email));
-      if (authController.listUser.isNotEmpty) {
+      listUser.removeWhere((data) => data.email!.contains(email));
+      if (listUser.isNotEmpty) {
         Utils.messSuccess(res.data['message']);
       } else {
-        Get.toNamed(Routes.LOGIN, parameters: {'category': '0'});
+        Navigator.of(navKey.currentContext!)
+            .pushNamed(Routes.LOGIN, arguments: {'category': '0'});
       }
     } else {
       Utils.messError(res.data['message']);
     }
+    notifyListeners();
   }
 
-  void showRemoveAccount(UserModel user) async {
+  void showRemoveAccount(int index, WidgetRef ref) async {
     Utils.showMessPopup(
         content: 'Bạn có muốn gỡ tài khoản này?',
         onPressed: () async {
-          Get.back();
-          await handleRemoveAccount(user.email!);
+          Navigator.of(navKey.currentContext!).pop();
+          await handleRemoveAccount(listUser[index].email!, ref);
         });
   }
 
   void showForgotPass() {
-    isHideMenu.value = false;
+    isHideMenu = false;
+    notifyListeners();
     showDialog(
-        context: Get.context!,
+        context: navKey.currentContext!,
         builder: (context) {
           return AlertDialog(
             shape:
@@ -95,5 +82,22 @@ class ListAccountController extends GetxController
             content: const ForgotPassView(),
           );
         });
+  }
+
+  void handleShowPage() {
+    isHideMenu = false;
+    notifyListeners();
+    Navigator.of(navKey.currentContext!)
+        .pushNamed(Routes.LOGIN, arguments: {'category': '2'});
+  }
+
+  void handleClose() {
+    isHideMenu = false;
+    notifyListeners();
+  }
+
+  void handleOpen() {
+    isHideMenu = true;
+    notifyListeners();
   }
 }
