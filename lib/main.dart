@@ -9,6 +9,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'package:logger/logger.dart';
 
@@ -36,6 +37,7 @@ void main() async {
           ],
           retries: 3)
     ]);
+    GetStorage.init();
     runApp(const ProviderScope(child: MyApp()));
   }, (err, stackTrace) {
     _log.e("App Error: $err");

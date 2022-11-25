@@ -17,48 +17,61 @@ class CustomDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
-      child: Column(
-        children: [
-          Container(
-            height: 230,
-            width: double.infinity,
-            color: kGreyColor400,
-            child: Stack(children: [
-              CustomImage(
-                  width: size.width,
-                  height: 230,
-                  url: ref.watch(Auth.user).getImages,
-                  shape: BoxShape.rectangle,
-                  errorWidget: const Center(
-                      child:
-                          Icon(Icons.person, size: 275, color: kWhiteColor))),
-              Positioned(
-                left: 0,
-                bottom: 0,
-                child: Container(
-                  height: 57,
-                  width: size.width,
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  color: kBlackColor900.withOpacity(0.7),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(ref.watch(Auth.user).getUserName,
-                          style: PrimaryStyle.bold(25, color: kWhiteColor)),
-                      const SizedBox(height: 3),
-                      Text('id: ${ref.watch(Auth.user).getID}',
-                          style: PrimaryStyle.regular(17, color: kWhiteColor))
-                    ],
+      child: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              height: 180,
+              width: double.infinity,
+              color: kGreyColor400,
+              child: Stack(children: [
+                CustomImage(
+                    width: size.width,
+                    height: 180,
+                    url: ref.watch(Auth.user).getImages,
+                    shape: BoxShape.rectangle,
+                    errorWidget: const Center(
+                        child:
+                            Icon(Icons.person, size: 180, color: kWhiteColor))),
+                Positioned(
+                  left: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 304,
+                    padding: const EdgeInsets.only(
+                        left: 10, top: 5, bottom: 5, right: 3),
+                    color: kBlackColor900.withOpacity(0.7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(ref.watch(Auth.user).getUserName,
+                                style:
+                                    PrimaryStyle.bold(25, color: kWhiteColor)),
+                            const SizedBox(height: 3),
+                            Text('id: ${ref.watch(Auth.user).getID}',
+                                style: PrimaryStyle.regular(17,
+                                    color: kWhiteColor))
+                          ],
+                        ),
+                        const Icon(Icons.arrow_forward_ios, color: kWhiteColor)
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
+              ]),
+            ),
+            ListView(shrinkWrap: true, children: [
+              itemMenu(
+                  Icons.checklist_outlined, 'Danh sách thành viên', ref, 0),
+              itemMenu(Icons.assignment_outlined, 'Hoá đơn', ref, 1),
+              itemMenu(Icons.assignment_late_outlined, 'Sự cố', ref, 2),
+              itemMenu(Icons.bookmark_outline_outlined, 'Dịch vụ', ref, 3)
             ]),
-          ),
-          itemMenu(Icons.checklist_outlined, 'Danh sách thành viên', ref, 0),
-          itemMenu(Icons.assignment_outlined, 'Hoá đơn', ref, 1),
-          itemMenu(Icons.assignment_late_outlined, 'Sự cố', ref, 2),
-          itemMenu(Icons.bookmark_outline_outlined, 'Dịch vụ', ref, 3)
-        ],
+          ],
+        ),
       ),
     );
   }

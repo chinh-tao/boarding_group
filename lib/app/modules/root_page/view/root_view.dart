@@ -22,6 +22,7 @@ class RootView extends ConsumerWidget {
       ),
       drawer: CustomDrawer(controller: _controller),
       body: ref.watch(page),
+      floatingActionButton: ref.watch(actionButton),
     );
   }
 }
@@ -40,4 +41,15 @@ final page = Provider<Widget>((ref) {
     default:
       return const HomeView();
   }
+});
+
+final actionButton = Provider<Widget?>((ref) {
+  if (ref.watch(_controller).index == 0) {
+    return FloatingActionButton(
+      onPressed: () {},
+      backgroundColor: kPrimaryColor,
+      child: const Icon(Icons.filter_list_alt),
+    );
+  }
+  return null;
 });

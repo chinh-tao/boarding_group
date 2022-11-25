@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //192.168.19.91 (CT)
 //192.168.0.104 (LN)
 const kApiUrlStaging = 'http://192.168.19.91:8000/mobi';
-const kApiUrlProduction = 'https://boarding-group.herokuapp.com/mobi';
+const kApiUrlProduction = 'https://boading-group.onrender.com/mobi';
 
 const kPrimaryColor = Color(0xff00695c);
 const kBodyText = Color(0xff707070);

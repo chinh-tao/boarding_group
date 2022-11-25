@@ -48,11 +48,11 @@ class SplashController extends ChangeNotifier {
             Routes.LIST_ACCOUNT, (route) => false,
             arguments: listUser);
       } else {
-        if (!hasDevice) {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
-          return;
-        }
+        // if (!hasDevice) {
+        //   Navigator.of(context)
+        //       .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
+        //   return;
+        // }
         Navigator.of(context).pushNamedAndRemoveUntil(
             Routes.LOGIN, (route) => false,
             arguments: {'category': '0'});

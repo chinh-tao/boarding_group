@@ -21,6 +21,7 @@ dependencies:
   dio_smart_retry: 
   path_provider:
   flutter_spinkit:
+  get_storage:
 
 dev_dependencies: 
   flutter_lints: 2.0.1

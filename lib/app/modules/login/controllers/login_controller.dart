@@ -79,6 +79,7 @@ class LoginController extends ChangeNotifier {
     if (res.statusCode == 200 && res.data['code'] == 0) {
       ref.read(Auth.user.notifier).state =
           UserModel.fromJson(res.data['payload']['infor_user']);
+      box.write('idBranch', res.data['payload']['id_branch']);
       ref.read(Auth.admin.notifier).state =
           AdminModel.fromJson(res.data['payload']);
       Navigator.of(navKey.currentContext!)
