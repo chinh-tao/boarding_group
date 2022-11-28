@@ -18,6 +18,7 @@ class IncidentModel {
     this.roomNumber,
     this.status,
     this.idBranch,
+    this.content,
   });
 
   String? title;
@@ -27,6 +28,7 @@ class IncidentModel {
   String? roomNumber;
   int? status;
   String? idBranch;
+  String? content;
 
   factory IncidentModel.fromJson(Map<String, dynamic> json) => IncidentModel(
         title: json["title"] ?? null,
@@ -36,6 +38,7 @@ class IncidentModel {
         roomNumber: json["roomNumber"] ?? null,
         idBranch: json["idBranch"] ?? null,
         status: json["status"]! == null ? null : json["status"],
+        content: json["content"] ?? null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,5 +49,6 @@ class IncidentModel {
         "roomNumber": roomNumber ?? null,
         "status": status == null ? null : status,
         "idBranch": idBranch ?? null,
+        "content": content ?? null,
       };
 }

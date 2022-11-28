@@ -11,6 +11,7 @@ class CustomInput extends StatelessWidget {
       this.title = '',
       this.colorTitle = kBodyText,
       this.maxLength,
+      this.maxLines = 1,
       this.inputFormatters,
       this.keyboardType,
       this.obscureText = false,
@@ -26,7 +27,7 @@ class CustomInput extends StatelessWidget {
   final TextEditingController controller;
   final String title, err, hintText;
   final Color? colorTitle, background;
-  final int? maxLength;
+  final int? maxLength, maxLines;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final bool obscureText, readOnly;
@@ -56,6 +57,7 @@ class CustomInput extends StatelessWidget {
                 obscureText: obscureText,
                 readOnly: readOnly,
                 onChanged: onChanged,
+                maxLines: maxLines,
                 decoration: InputDecoration(
                     fillColor: background,
                     filled: background != null ? true : false,
@@ -64,7 +66,8 @@ class CustomInput extends StatelessWidget {
                         color: kBodyText.withOpacity(0.5), 17),
                     suffixIcon: icons,
                     counter: const SizedBox.shrink(),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                    contentPadding: EdgeInsets.symmetric(
+                        horizontal: 15, vertical: maxLines == 1 ? 0 : 15),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(

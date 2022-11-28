@@ -1,20 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/auth.dart';
 import '../../../common/config.dart';
+import '../../../common/global.dart';
 import '../../../common/primary_style.dart';
-import '../controller/list_incident_controller.dart';
-
-// class ListIncidentView extends ConsumerWidget {
-//   const ListIncidentView({
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return Container();
-//   }
-// }
+import '../../../routes/app_pages.dart';
+import '../controller/incident_controller.dart';
 
 class ListIncidentView extends ConsumerStatefulWidget {
   const ListIncidentView({Key? key}) : super(key: key);
@@ -38,33 +30,31 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Text('Danh sách sự cố', style: PrimaryStyle.normal(20)),
+          padding: const EdgeInsets.only(top: 10, bottom: 5),
+          child: Text('Danh sách sự cố', style: PrimaryStyle.bold(20)),
         ),
         Expanded(
             child: RefreshIndicator(
                 onRefresh: () async => ref
                     .read(_controller.notifier)
-                    .initData(ref, isRefresh: true),
-                backgroundColor: kIndigoBlueColor900,
+                    .loadDataIncident(ref, isRefresh: true),
+                backgroundColor: kPrimaryColor,
                 color: kWhiteColor,
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
-                    child: ref.watch(showListMember))))
+                child: ref.watch(showListMember)))
       ],
     );
   }
 }
 
-final _controller = ChangeNotifierProvider.autoDispose<ListIncidentController>(
-    (ref) => ListIncidentController());
+final _controller = ChangeNotifierProvider.autoDispose<IncidentController>(
+    (ref) => IncidentController());
 
 final showListMember = Provider.autoDispose<Widget>((ref) {
   if (ref.watch(_controller).isLoading) {
     return const Center(
-      child: CircularProgressIndicator(color: kIndigoBlueColor900),
+      child: CircularProgressIndicator(color: kPrimaryColor),
     );
-  } else if (ref.watch(_controller).lisIncident.isEmpty) {
+  } else if (ref.watch(Auth.bill) == null) {
     return Stack(
       children: [
         Center(
@@ -76,36 +66,69 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
   }
   return ListView.builder(
       shrinkWrap: true,
-      itemCount: ref.watch(_controller).lisIncident.length,
+      itemCount: ref.watch(Auth.lisIncident).length,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        final listIncident = ref.watch(_controller).lisIncident[index];
+        final listIncident = ref.watch(Auth.lisIncident)[index];
         return Card(
           elevation: 5,
           color: listIncident.status == 1 ? kGreenColor700 : null,
+          margin: const EdgeInsets.all(6),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    itemText('Tên sự cố:', " ${listIncident.title}",
-                        listIncident.status!),
-                    const SizedBox(height: 5),
-                    itemText('Người thông báo:', " ${listIncident.userName}",
-                        listIncident.status!),
-                    const SizedBox(height: 5),
-                    itemText('Ngày thông báo:', " ${listIncident.date}",
-                        listIncident.status!)
-                  ],
-                ),
-                showLevel("${listIncident.level}")
-              ],
+          child: InkWell(
+            onTap: () => Navigator.of(context)
+                .pushNamed(Routes.INCIDENTDETAIL, arguments: index),
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: size.width / 1.5),
+                        child: !hasTextOverflow(
+                                'Tên sự cố: ${listIncident.title}')
+                            ? itemText('Tên sự cố:', " ${listIncident.title}",
+                                listIncident.status!)
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth: size.width / 1.75),
+                                      child: Text(
+                                          'Tên sự cố: ${listIncident.title}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.visible,
+                                          style: PrimaryStyle.medium(16,
+                                              color: listIncident.status == 1
+                                                  ? Colors.white
+                                                  : kIndigoBlueColor900)),
+                                    ),
+                                    Text("...",
+                                        style: PrimaryStyle.medium(16,
+                                            color: listIncident.status == 1
+                                                ? Colors.white
+                                                : kIndigoBlueColor900))
+                                  ]),
+                      ),
+                      showLevel("${listIncident.level}")
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  itemText('Người thông báo:', " ${listIncident.userName}",
+                      listIncident.status!),
+                  const SizedBox(height: 5),
+                  itemText('Ngày thông báo:', " ${listIncident.date}",
+                      listIncident.status!)
+                ],
+              ),
             ),
           ),
         );
@@ -115,24 +138,24 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
 Widget showLevel(String level) {
   if (level == "Cao") {
     return Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(3.5),
         decoration: BoxDecoration(
-            color: kRedColor600, borderRadius: BorderRadius.circular(7)),
+            color: kRedColor600, borderRadius: BorderRadius.circular(5)),
         child:
-            Text(level, style: PrimaryStyle.regular(16, color: Colors.white)));
+            Text(level, style: PrimaryStyle.regular(12, color: Colors.white)));
   } else if (level == "Trung bình") {
     return Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(3.5),
         decoration: BoxDecoration(
-            color: kOrangeColor800, borderRadius: BorderRadius.circular(7)),
+            color: kOrangeColor800, borderRadius: BorderRadius.circular(5)),
         child:
-            Text(level, style: PrimaryStyle.regular(16, color: Colors.white)));
+            Text(level, style: PrimaryStyle.regular(12, color: Colors.white)));
   }
   return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(3.5),
       decoration: BoxDecoration(
-          color: kBlueColor500, borderRadius: BorderRadius.circular(7)),
-      child: Text(level, style: PrimaryStyle.regular(16, color: Colors.white)));
+          color: kIndigoBlueColor900, borderRadius: BorderRadius.circular(5)),
+      child: Text(level, style: PrimaryStyle.regular(12, color: Colors.white)));
 }
 
 Widget itemText(String title, String content, int status) {
@@ -148,4 +171,14 @@ Widget itemText(String title, String content, int status) {
               color: status == 1 ? Colors.white : kIndigoBlueColor900),
         )
       ]));
+}
+
+bool hasTextOverflow(String text) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(
+        text: text, style: PrimaryStyle.normal(16, color: kIndigoBlueColor900)),
+    maxLines: 1,
+    textDirection: TextDirection.rtl,
+  )..layout(minWidth: 0, maxWidth: size.width / 1.7);
+  return textPainter.didExceedMaxLines;
 }
