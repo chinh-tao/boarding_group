@@ -21,33 +21,30 @@ class ForgotPassView extends ConsumerWidget {
             children: [
               CustomInput(
                   title: '',
-                  controller: ref.watch(_controller).inputCode,
+                  controller: ref.watch(forgotPassController).inputCode,
                   maxLength: 12,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   hintText: 'căn cước hoặc hộ chiếu',
-                  err: ref.watch(_controller).listError[0]),
+                  err: ref.watch(forgotPassController).listError[0]),
               const SizedBox(height: 17),
               CustomInput(
                   title: '',
-                  controller: ref.watch(_controller).inputEmail,
+                  controller: ref.watch(forgotPassController).inputEmail,
                   hintText: 'tài khoản email',
-                  err: ref.watch(_controller).listError[1]),
+                  err: ref.watch(forgotPassController).listError[1]),
               const SizedBox(height: 35),
               ButtonLoading(
                   height: 50,
                   width: 170,
                   sizeContent: 16,
                   colors: kIndigoBlueColor900,
-                  isLoading: ref.watch(_controller).isLoading,
+                  isLoading: ref.watch(forgotPassController).isLoading,
                   titleButton: 'GỬI',
                   onPressed: () async =>
-                      await ref.read(_controller.notifier).submit())
+                      await ref.read(forgotPassController.notifier).submit())
             ],
           )),
     );
   }
 }
-
-final _controller = ChangeNotifierProvider.autoDispose<ForgotPassController>(
-    (ref) => ForgotPassController());

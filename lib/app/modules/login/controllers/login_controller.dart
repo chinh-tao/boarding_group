@@ -1,4 +1,3 @@
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/auth.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/model/admin_model.dart';
@@ -111,3 +110,6 @@ class LoginController extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+var loginController = ChangeNotifierProvider.autoDispose<LoginController>(
+    (ref) => LoginController());

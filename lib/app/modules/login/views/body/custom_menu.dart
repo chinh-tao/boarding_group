@@ -54,26 +54,30 @@ class CustomMenu extends ConsumerWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        if (ref.watch(_controller).isHideMenu) ...[
+        if (ref.watch(listAccountController).isHideMenu) ...[
           itemMenu(
               content: "Thêm tài khoản",
               icon: Icons.add,
-              onPressed: () => ref.read(_controller.notifier).handleShowPage(),
+              onPressed: () =>
+                  ref.read(listAccountController.notifier).handleShowPage(),
               paddingWidth: 3,
               bottom: 70),
           itemMenu(
               content: "Quên mật khẩu",
               icon: Icons.pin_rounded,
-              onPressed: () => ref.read(_controller.notifier).showForgotPass(),
+              onPressed: () =>
+                  ref.read(listAccountController.notifier).showForgotPass(),
               paddingWidth: 5,
               bottom: 120),
           itemMenu(
               bottom: 0,
-              onPressed: () => ref.read(_controller.notifier).handleClose()),
+              onPressed: () =>
+                  ref.read(listAccountController.notifier).handleClose()),
         ] else ...[
           FloatingActionButton(
             backgroundColor: kOrangeColor800,
-            onPressed: () => ref.read(_controller.notifier).handleOpen(),
+            onPressed: () =>
+                ref.read(listAccountController.notifier).handleOpen(),
             child: const Icon(Icons.menu, color: kWhiteColor, size: 27),
           )
         ],
@@ -81,6 +85,3 @@ class CustomMenu extends ConsumerWidget {
     );
   }
 }
-
-final _controller = ChangeNotifierProvider<ListAccountController>(
-    (ref) => ListAccountController());

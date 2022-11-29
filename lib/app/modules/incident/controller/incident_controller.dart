@@ -1,4 +1,3 @@
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/model/incident_model.dart';
 import 'package:flutter/material.dart';
@@ -97,3 +96,6 @@ class IncidentController extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+final incidentController =
+    ChangeNotifierProvider<IncidentController>((ref) => IncidentController());

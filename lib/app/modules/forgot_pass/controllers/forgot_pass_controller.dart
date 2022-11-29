@@ -1,7 +1,7 @@
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ForgotPassController extends ChangeNotifier {
   TextEditingController inputCode = TextEditingController();
@@ -51,3 +51,7 @@ class ForgotPassController extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+final forgotPassController =
+    ChangeNotifierProvider.autoDispose<ForgotPassController>(
+        (ref) => ForgotPassController());

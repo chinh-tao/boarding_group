@@ -18,15 +18,18 @@ class BodyRegister extends ConsumerWidget {
           children: [
             const SizedBox(height: 80),
             GestureDetector(
-              onTap: () => ref.read(_controller.notifier).showModalSheet(),
+              onTap: () =>
+                  ref.read(registerController.notifier).showModalSheet(),
               child: CircleAvatar(
-                foregroundImage: ref.watch(_controller).fileImage.path != ''
-                    ? Image.file(ref.watch(_controller).fileImage, height: 170)
-                        .image
-                    : null,
+                foregroundImage:
+                    ref.watch(registerController).fileImage.path != ''
+                        ? Image.file(ref.watch(registerController).fileImage,
+                                height: 170)
+                            .image
+                        : null,
                 radius: 110,
                 backgroundColor: kGreyColor400,
-                child: ref.watch(_controller).fileImage.path == ''
+                child: ref.watch(registerController).fileImage.path == ''
                     ? const Icon(Icons.add_a_photo,
                         color: Colors.black, size: 50)
                     : const SizedBox.shrink(),
@@ -34,18 +37,19 @@ class BodyRegister extends ConsumerWidget {
             ),
             const SizedBox(height: 30),
             CustomInput(
-              controller: ref.watch(_controller).inputCode,
+              controller: ref.watch(registerController).inputCode,
               title: 'Căn cước/chứng minh thư',
               keyboardType: TextInputType.number,
-              onChanged: (value) =>
-                  ref.read(_controller.notifier).handleChangeInputName(value),
+              onChanged: (value) => ref
+                  .read(registerController.notifier)
+                  .handleChangeInputName(value),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              err: ref.watch(_controller).listError[0],
+              err: ref.watch(registerController).listError[0],
             ),
             const SizedBox(height: 8),
             CustomInput(
               readOnly: true,
-              controller: ref.watch(_controller).inputName,
+              controller: ref.watch(registerController).inputName,
               background: kGreyColor400,
               hintText: 'tên người dùng',
               title: '',
@@ -53,9 +57,9 @@ class BodyRegister extends ConsumerWidget {
             ),
             const SizedBox(height: 15),
             CustomInput(
-              controller: ref.watch(_controller).inputEmail,
+              controller: ref.watch(registerController).inputEmail,
               title: 'Tài khoản email',
-              err: ref.watch(_controller).listError[1],
+              err: ref.watch(registerController).listError[1],
             ),
             const SizedBox(height: 40),
             ButtonLoading(
@@ -63,15 +67,13 @@ class BodyRegister extends ConsumerWidget {
                 width: 170,
                 sizeContent: 18,
                 colors: kPrimaryColor,
-                isLoading: ref.watch(_controller).isLoading,
+                isLoading: ref.watch(registerController).isLoading,
                 titleButton: "Đăng ký",
-                onPressed: () => ref.read(_controller.notifier).submit(ref))
+                onPressed: () =>
+                    ref.read(registerController.notifier).submit(ref))
           ],
         ),
       ),
     );
   }
 }
-
-final _controller = ChangeNotifierProvider.autoDispose<RegisterController>(
-    (ref) => RegisterController());

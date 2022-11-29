@@ -17,7 +17,7 @@ class _ListAccountViewState extends ConsumerState<ListAccountView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(_controller.notifier).initData(context);
+      ref.read(listAccountController.notifier).initData(context);
     });
     super.initState();
   }
@@ -26,11 +26,8 @@ class _ListAccountViewState extends ConsumerState<ListAccountView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: BodyListAccount(controller: _controller),
+      body: BodyListAccount(controller: listAccountController),
       floatingActionButton: const CustomMenu(),
     );
   }
 }
-
-final _controller = ChangeNotifierProvider<ListAccountController>(
-    (ref) => ListAccountController());

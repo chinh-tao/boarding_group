@@ -1,6 +1,3 @@
-import 'dart:js';
-
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,3 +76,6 @@ class BillController extends ChangeNotifier {
         });
   }
 }
+
+final billController =
+    ChangeNotifierProvider<BillController>((ref) => BillController());

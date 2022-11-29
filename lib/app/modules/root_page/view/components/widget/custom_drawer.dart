@@ -1,9 +1,7 @@
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:boarding_group/app/widget/image/custom_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../../common/auth.dart';
 import '../../../../../common/config.dart';
 import '../../../../../common/global.dart';

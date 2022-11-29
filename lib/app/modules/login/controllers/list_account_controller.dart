@@ -1,4 +1,3 @@
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
@@ -101,3 +100,6 @@ class ListAccountController extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+final listAccountController = ChangeNotifierProvider<ListAccountController>(
+    (ref) => ListAccountController());

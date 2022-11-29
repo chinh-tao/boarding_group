@@ -1,4 +1,3 @@
-import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import '../../../common/config.dart';
@@ -13,8 +12,8 @@ class AddIncidentView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final watch = ref.watch(_controller);
-    final read = ref.read(_controller);
+    final watch = ref.watch(incidentController);
+    final read = ref.read(incidentController);
     watch.initData(ref, isList: false);
 
     return Scaffold(
@@ -82,7 +81,7 @@ class AddIncidentView extends ConsumerWidget {
                     height: 50,
                     width: size.width,
                     sizeContent: 18,
-                    isLoading: ref.watch(_controller).isLoadingButton,
+                    isLoading: ref.watch(incidentController).isLoading,
                     titleButton: "Thêm sự cố",
                     onPressed: () => watch.sendIncident(ref)),
               ),
@@ -91,6 +90,3 @@ class AddIncidentView extends ConsumerWidget {
         ));
   }
 }
-
-final _controller = ChangeNotifierProvider.autoDispose<IncidentController>(
-    (ref) => IncidentController());

@@ -21,7 +21,6 @@ class ListMember extends ConsumerWidget {
       );
     }
     return ListView.builder(
-        shrinkWrap: true,
         itemCount: listMember.length,
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
@@ -49,11 +48,10 @@ class ListMember extends ConsumerWidget {
                   children: [
                     const SizedBox(height: 5),
                     Text(listMember[index].getUserName,
-                        style:
-                            PrimaryStyle.bold(27, color: kIndigoBlueColor900)),
+                        style: PrimaryStyle.bold(27)),
                     Text(listMember[index].getPhone,
-                        style:
-                            PrimaryStyle.normal(18, color: kIndigoBlueColor900))
+                        style: PrimaryStyle.normal(18,
+                            color: kBodyText.withOpacity(0.7)))
                   ],
                 ))
               ],

@@ -22,21 +22,15 @@ class RootView extends ConsumerWidget {
         backgroundColor: kPrimaryColor,
         centerTitle: true,
       ),
-      drawer: CustomDrawer(controller: _controller),
+      drawer: CustomDrawer(controller: rootController),
       body: ref.watch(page),
       floatingActionButton: ref.watch(actionButton),
     );
   }
 }
 
-final _controller =
-    ChangeNotifierProvider<RootController>((ref) => RootController());
-
-final billController =
-    ChangeNotifierProvider<BillController>((ref) => BillController());
-
 final page = Provider<Widget>((ref) {
-  switch (ref.watch(_controller).index) {
+  switch (ref.watch(rootController).index) {
     case 1:
       return const ListBillView();
     case 2:
@@ -49,20 +43,20 @@ final page = Provider<Widget>((ref) {
 });
 
 final actionButton = Provider<Widget?>((ref) {
-  if (ref.watch(_controller).index == 0) {
+  if (ref.watch(rootController).index == 0) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () => ref.read(rootController.notifier).showSearchView(),
       backgroundColor: kPrimaryColor,
       child: const Icon(Icons.filter_list_alt),
     );
-  } else if (ref.watch(_controller).index == 1) {
+  } else if (ref.watch(rootController).index == 1) {
     return FloatingActionButton(
         backgroundColor: kPrimaryColor,
         onPressed: () {
           ref.watch(billController).showMonth(ref);
         },
         child: const Icon(Icons.calendar_month_sharp));
-  } else if (ref.watch(_controller).index == 2) {
+  } else if (ref.watch(rootController).index == 2) {
     return FloatingActionButton(
         backgroundColor: kPrimaryColor,
         onPressed: () =>

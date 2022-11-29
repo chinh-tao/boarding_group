@@ -23,7 +23,7 @@ class _SplashViewState extends ConsumerState<SplashView>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(_controller.notifier).initData(context, ref);
+      ref.read(splashController.notifier).initData(context, ref);
     });
     super.initState();
   }
@@ -53,6 +53,3 @@ class _SplashViewState extends ConsumerState<SplashView>
     );
   }
 }
-
-final _controller =
-    ChangeNotifierProvider<SplashController>((ref) => SplashController());

@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../../../common/api.dart';
 import '../../../common/auth.dart';
+import '../../../common/global.dart';
 import '../../../model/user_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../common/utils.dart';
@@ -62,3 +61,6 @@ class SplashController extends ChangeNotifier {
     }
   }
 }
+
+final splashController =
+    ChangeNotifierProvider<SplashController>((ref) => SplashController());

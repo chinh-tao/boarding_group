@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/utils.dart';
 import 'package:boarding_group/app/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+
+import '../../../common/global.dart';
 
 class HomeController extends ChangeNotifier {
   TextEditingController inputRoom = TextEditingController();
@@ -59,3 +60,6 @@ class HomeController extends ChangeNotifier {
     }
   }
 }
+
+final homeController =
+    ChangeNotifierProvider<HomeController>((ref) => HomeController());

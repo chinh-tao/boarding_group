@@ -21,7 +21,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(_controller.notifier).initData(context);
+      ref.read(loginController.notifier).initData(context);
     });
     super.initState();
   }
@@ -41,40 +41,40 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   textAlign: TextAlign.center,
                   style: PrimaryStyle.bold(color: kPrimaryColor, 33)),
               const SizedBox(height: 40),
-              if (ref.watch(_controller).arguments['category'] != '1') ...[
+              if (ref.watch(loginController).arguments['category'] != '1') ...[
                 CustomInput(
-                  controller: ref.watch(_controller).inputEmail,
+                  controller: ref.watch(loginController).inputEmail,
                   title: 'Tài khoản email',
-                  err: ref.watch(_controller).listErrLogin[0],
+                  err: ref.watch(loginController).listErrLogin[0],
                 ),
                 const SizedBox(height: 15),
               ],
               CustomInput(
-                controller: ref.watch(_controller).inputPass,
+                controller: ref.watch(loginController).inputPass,
                 title: 'Mật khẩu',
-                obscureText: ref.watch(_controller).isHidePass,
+                obscureText: ref.watch(loginController).isHidePass,
                 icons: IconButton(
                     icon: Icon(ref.watch(icons), color: kPrimaryColor),
                     onPressed: () =>
-                        ref.read(_controller.notifier).handleShowPass()),
-                err: ref.watch(_controller).listErrLogin[1],
+                        ref.read(loginController.notifier).handleShowPass()),
+                err: ref.watch(loginController).listErrLogin[1],
               ),
               const SizedBox(height: 40),
               ButtonLoading(
                   height: 55,
                   width: 170,
                   sizeContent: 18,
-                  isLoading: ref.watch(_controller).isLoading,
+                  isLoading: ref.watch(loginController).isLoading,
                   titleButton: "Đăng nhập",
                   onPressed: () async =>
-                      await ref.read(_controller.notifier).submit(ref)),
+                      await ref.read(loginController.notifier).submit(ref)),
               const SizedBox(height: 22),
-              if (ref.watch(_controller).arguments['category'] == '0') ...[
+              if (ref.watch(loginController).arguments['category'] == '0') ...[
                 Align(
                   alignment: Alignment.centerRight,
                   child: SecondTextButton(
                       onPressed: () =>
-                          ref.read(_controller.notifier).showForgotPass(),
+                          ref.read(loginController.notifier).showForgotPass(),
                       title: 'Quên mật khẩu?'),
                 )
               ] else ...[
@@ -94,30 +94,27 @@ class _LoginViewState extends ConsumerState<LoginView> {
   }
 }
 
-var _controller = ChangeNotifierProvider.autoDispose<LoginController>(
-    (ref) => LoginController());
-
 final title = Provider.autoDispose<String>((ref) {
-  if (ref.watch(_controller).arguments['category'] == '1') {
-    return ref.watch(_controller).userModel.userName!;
+  if (ref.watch(loginController).arguments['category'] == '1') {
+    return ref.watch(loginController).userModel.userName!;
   }
   return 'Boarding Group';
 });
 
 final icons = Provider.autoDispose<IconData>((ref) {
-  if (ref.watch(_controller).isHidePass) {
+  if (ref.watch(loginController).isHidePass) {
     return Icons.visibility_off_outlined;
   }
   return Icons.visibility_outlined;
 });
 
 final images = Provider.autoDispose<Widget>((ref) {
-  if (ref.watch(_controller).arguments['category'] == '1') {
-    if (ref.watch(_controller).userModel.images != null) {
+  if (ref.watch(loginController).arguments['category'] == '1') {
+    if (ref.watch(loginController).userModel.images != null) {
       return CustomImage(
           width: 200,
           height: 200,
-          url: ref.watch(_controller).userModel.images!,
+          url: ref.watch(loginController).userModel.images!,
           errorWidget: const CustomImageDefault(height: 200, width: 200));
     }
     return const CustomImageDefault(

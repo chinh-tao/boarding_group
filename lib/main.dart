@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/custom_interceptor.dart';
 import 'package:boarding_group/app/common/global.dart';

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:boarding_group/app/common/api.dart';
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
@@ -148,3 +147,7 @@ class RegisterController extends ChangeNotifier {
     });
   }
 }
+
+final registerController =
+    ChangeNotifierProvider.autoDispose<RegisterController>(
+        (ref) => RegisterController());
