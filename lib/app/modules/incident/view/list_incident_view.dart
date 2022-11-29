@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-
-import '../../../common/auth.dart';
 import '../../../common/config.dart';
 import '../../../common/global.dart';
 import '../../../common/primary_style.dart';
@@ -19,7 +17,7 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(_controller.notifier).initData(ref);
+      ref.read(incidentController.notifier).initData(ref);
     });
     super.initState();
   }
@@ -36,7 +34,7 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
         Expanded(
             child: RefreshIndicator(
                 onRefresh: () async => ref
-                    .read(_controller.notifier)
+                    .read(incidentController.notifier)
                     .loadDataIncident(ref, isRefresh: true),
                 backgroundColor: kPrimaryColor,
                 color: kWhiteColor,
@@ -46,15 +44,12 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
   }
 }
 
-final _controller = ChangeNotifierProvider.autoDispose<IncidentController>(
-    (ref) => IncidentController());
-
 final showListMember = Provider.autoDispose<Widget>((ref) {
-  if (ref.watch(_controller).isLoading) {
+  if (ref.watch(incidentController).isLoading) {
     return const Center(
       child: CircularProgressIndicator(color: kPrimaryColor),
     );
-  } else if (ref.watch(_controller).lisIncident.isEmpty) {
+  } else if (ref.watch(incidentController).lisIncident.isEmpty) {
     return Stack(
       children: [
         Center(
@@ -66,10 +61,10 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
   }
   return ListView.builder(
       shrinkWrap: true,
-      itemCount: ref.watch(_controller).lisIncident.length,
+      itemCount: ref.watch(incidentController).lisIncident.length,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        final listIncident = ref.watch(_controller).lisIncident[index];
+        final listIncident = ref.watch(incidentController).lisIncident[index];
         return Card(
           elevation: 5,
           color: listIncident.status == 1 ? kGreenColor700 : null,

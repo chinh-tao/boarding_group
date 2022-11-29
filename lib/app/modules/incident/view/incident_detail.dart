@@ -1,14 +1,7 @@
-import 'dart:convert';
-
-import 'package:boarding_group/app/common/auth.dart';
-import 'package:boarding_group/app/model/incident_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../common/config.dart';
-import '../../../common/global.dart';
 import '../../../common/primary_style.dart';
-import '../controller/incident_controller.dart';
 
 class IncidentDetail extends ConsumerWidget {
   const IncidentDetail({Key? key}) : super(key: key);

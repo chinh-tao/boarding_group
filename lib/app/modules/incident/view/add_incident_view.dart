@@ -7,14 +7,28 @@ import '../../../widget/button/button_loading.dart';
 import '../../../widget/custom_input.dart';
 import '../controller/incident_controller.dart';
 
-class AddIncidentView extends ConsumerWidget {
-  const AddIncidentView({super.key});
+class AddIncidentView extends ConsumerStatefulWidget {
+  const AddIncidentView({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _AddIncidentViewState();
+}
+
+class _AddIncidentViewState extends ConsumerState<AddIncidentView> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(incidentController.notifier).initData(ref, isList: false);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final watch = ref.watch(incidentController);
     final read = ref.read(incidentController);
-    watch.initData(ref, isList: false);
 
     return Scaffold(
         appBar: AppBar(

@@ -6,21 +6,23 @@ import 'package:month_picker_dialog/month_picker_dialog.dart';
 import '../../../common/auth.dart';
 import '../../../common/utils.dart';
 import '../../../model/bill_model.dart';
-import '../view/components/dialog_month.dart';
+import '../view/components/show_dialog_month.dart';
 
 class BillController extends ChangeNotifier {
   var listBill = <BillModel>[];
   var isLoading = false;
   var status = 0;
-  var date = DateFormat("yyyy-MM").format(DateTime.now());
+  var date = '';
+  var format = DateFormat("yyyy-MM");
 
-  void initData(WidgetRef ref) {
-    // date = format.format(DateTime.now());
-    // print("object123: $date");
-    loadDataBill(ref, isRefresh: true);
+  void initData(WidgetRef ref) async {
+    date = format.format(DateTime.now());
+    print("object123: $date");
+    await loadDataBill(ref, isRefresh: true);
   }
 
-  void loadDataBill(ref, {bool isRefresh = false}) async {
+  Future<void> loadDataBill(WidgetRef ref, {bool isRefresh = false}) async {
+    print("object1231: $date");
     final form = <String, dynamic>{
       "room": ref.watch(Auth.user).getRoomNumber,
       "month": date
@@ -48,7 +50,7 @@ class BillController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showMonth(ref) async {
+  void showMonth() async {
     final year = int.parse(date.substring(0, 4));
     final month = int.parse(date.substring(5, 7));
     print("object123: $year");
@@ -61,19 +63,10 @@ class BillController extends ChangeNotifier {
       lastDate: DateTime(DateTime.now().year, DateTime.now().month),
     );
     if (pickedMonth != null) {
-      date = DateFormat("yyyy-MM").format(pickedMonth);
+      date = format.format(pickedMonth);
       print("object12: $date");
       notifyListeners();
-      loadDataBill(ref, isRefresh: true);
     }
-  }
-
-  void showDialogMonth() {
-    showDialog(
-        context: navKey.currentContext!,
-        builder: (context) {
-          return const DialogMonth();
-        });
   }
 }
 

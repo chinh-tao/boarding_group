@@ -25,12 +25,14 @@ class IncidentController extends ChangeNotifier {
       loadDataIncident(ref);
     } else {
       nameController.text = ref.watch(Auth.user).getUserName;
+      listErr = ["", ""];
+      notifyListeners();
     }
   }
 
   // list incident
   Future<void> loadDataIncident(WidgetRef ref, {bool isRefresh = false}) async {
-    final form = <String, dynamic>{"room": roomController.text};
+    final form = <String, dynamic>{"room": roomController.text.trim()};
     if (!isRefresh) isLoading = true;
     notifyListeners();
     final res = await api.get('/list-incident', queryParameters: form);
@@ -79,8 +81,8 @@ class IncidentController extends ChangeNotifier {
       "title": titleController.text.trim(),
       "date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
       "level": leverText,
-      "user_name": nameController.text,
-      "room": roomController.text,
+      "user_name": nameController.text.trim(),
+      "room": roomController.text.trim(),
       "content": contentController.text.trim()
     };
     final res = await api.post('/room-incident', data: form);

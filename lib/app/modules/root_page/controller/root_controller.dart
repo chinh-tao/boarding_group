@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/global.dart';
+import '../../bill/view/components/show_dialog_month.dart';
 
 class RootController extends ChangeNotifier {
   GlobalKey<NavigatorState> rootKey = GlobalKey<NavigatorState>();
@@ -25,6 +26,16 @@ class RootController extends ChangeNotifier {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               content: const SearchListMember());
+        });
+  }
+  void showSearchBillView() {
+    showDialog(
+        context: navKey.currentContext!,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              content: const ShowDialogMonth());
         });
   }
 }
