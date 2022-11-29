@@ -13,6 +13,7 @@ dependencies:
   riverpod_annotation:  
   device_info_plus:
   dio:
+  intl:
   image_picker:
   firebase_core:
   logger:
@@ -22,6 +23,7 @@ dependencies:
   path_provider:
   flutter_spinkit:
   get_storage:
+  month_picker_dialog: 0.4.0
 
 dev_dependencies: 
   flutter_lints: 2.0.1
