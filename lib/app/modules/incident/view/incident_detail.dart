@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:boarding_group/app/common/auth.dart';
 import 'package:boarding_group/app/model/incident_model.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,9 @@ class IncidentDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final index =
-        int.parse(ModalRoute.of(context)!.settings.arguments.toString());
-    final listIncident = ref.watch(Auth.lisIncident)[index];
+    final arg =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final listIncident = arg['listIncident'];
 
     return Scaffold(
       appBar: AppBar(

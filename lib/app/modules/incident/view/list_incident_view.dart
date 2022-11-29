@@ -54,7 +54,7 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
     return const Center(
       child: CircularProgressIndicator(color: kPrimaryColor),
     );
-  } else if (ref.watch(Auth.bill) == null) {
+  } else if (ref.watch(_controller).lisIncident.isEmpty) {
     return Stack(
       children: [
         Center(
@@ -66,10 +66,10 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
   }
   return ListView.builder(
       shrinkWrap: true,
-      itemCount: ref.watch(Auth.lisIncident).length,
+      itemCount: ref.watch(_controller).lisIncident.length,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        final listIncident = ref.watch(Auth.lisIncident)[index];
+        final listIncident = ref.watch(_controller).lisIncident[index];
         return Card(
           elevation: 5,
           color: listIncident.status == 1 ? kGreenColor700 : null,
@@ -77,8 +77,8 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: InkWell(
-            onTap: () => Navigator.of(context)
-                .pushNamed(Routes.INCIDENTDETAIL, arguments: index),
+            onTap: () => Navigator.of(context).pushNamed(Routes.INCIDENTDETAIL,
+                arguments: {'listIncident': listIncident}),
             borderRadius: BorderRadius.circular(10),
             child: Padding(
               padding: const EdgeInsets.all(15),

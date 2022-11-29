@@ -1,4 +1,5 @@
 import 'package:boarding_group/app/common/global.dart';
+import 'package:boarding_group/app/modules/bill/controller/bill_controller.dart';
 import 'package:boarding_group/app/modules/root_page/controller/root_controller.dart';
 import 'package:boarding_group/app/modules/root_page/view/components/widget/custom_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,9 @@ class RootView extends ConsumerWidget {
 final _controller =
     ChangeNotifierProvider<RootController>((ref) => RootController());
 
+final billController =
+    ChangeNotifierProvider<BillController>((ref) => BillController());
+
 final page = Provider<Widget>((ref) {
   switch (ref.watch(_controller).index) {
     case 1:
@@ -51,6 +55,13 @@ final actionButton = Provider<Widget?>((ref) {
       backgroundColor: kPrimaryColor,
       child: const Icon(Icons.filter_list_alt),
     );
+  } else if (ref.watch(_controller).index == 1) {
+    return FloatingActionButton(
+        backgroundColor: kPrimaryColor,
+        onPressed: () {
+          ref.watch(billController).showMonth(ref);
+        },
+        child: const Icon(Icons.calendar_month_sharp));
   } else if (ref.watch(_controller).index == 2) {
     return FloatingActionButton(
         backgroundColor: kPrimaryColor,
