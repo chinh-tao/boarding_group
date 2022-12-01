@@ -53,7 +53,7 @@ final actionButton = Provider<Widget?>((ref) {
     return FloatingActionButton(
         backgroundColor: kPrimaryColor,
         onPressed: () {
-          ref.watch(billController).showMonth(ref);
+          ref.read(rootController.notifier).showSearchBillView();
         },
         child: const Icon(Icons.calendar_month_sharp));
   } else if (ref.watch(rootController).index == 2) {

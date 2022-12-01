@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../common/config.dart';
 import '../../../common/primary_style.dart';
 import '../../../routes/app_pages.dart';
+import '../controller/bill_controller.dart';
 
 class ListBillView extends ConsumerStatefulWidget {
   const ListBillView({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _ListBillViewState extends ConsumerState<ListBillView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(_controller.notifier).initData(ref);
+      ref.read(billController.notifier).initData(ref);
     });
     super.initState();
   }
@@ -33,24 +34,21 @@ class _ListBillViewState extends ConsumerState<ListBillView> {
         Expanded(
             child: RefreshIndicator(
                 onRefresh: () async =>
-                    ref.read(_controller.notifier).loadDataBill(ref),
+                    ref.read(billController.notifier).loadDataBill(ref),
                 backgroundColor: kPrimaryColor,
                 color: kWhiteColor,
-                child: ref.watch(showListMember)))
+                child: ref.watch(showList)))
       ],
     );
   }
 }
 
-final _controller =
-    ChangeNotifierProvider<BillController>((ref) => BillController());
-
-final showListMember = Provider.autoDispose<Widget>((ref) {
-  if (ref.watch(_controller).isLoading) {
+final showList = Provider.autoDispose<Widget>((ref) {
+  if (ref.watch(billController).isLoading) {
     return const Center(
       child: CircularProgressIndicator(color: kPrimaryColor),
     );
-  } else if (ref.watch(_controller).listBill.isEmpty) {
+  } else if (ref.watch(billController).listBill.isEmpty) {
     return Stack(
       children: [
         Center(
@@ -62,15 +60,15 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
   }
   return ListView.builder(
       shrinkWrap: true,
-      itemCount: ref.watch(_controller).listBill.length,
+      itemCount: ref.watch(billController).listBill.length,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
-        final listBill = ref.watch(_controller).listBill[index];
+        final listBill = ref.watch(billController).listBill[index];
         return Card(
           elevation: 5,
           margin: const EdgeInsets.all(6),
           color: backgroundColor(
-              ref.watch(_controller).status, listBill.deadline!),
+              ref.watch(billController).status, listBill.deadline!),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: InkWell(
@@ -83,18 +81,18 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
                 children: [
                   Text('${listBill.nameBill}',
                       style: PrimaryStyle.normal(20,
-                          color: colorText(ref.watch(_controller).status,
+                          color: colorText(ref.watch(billController).status,
                                   listBill.deadline!) ??
                               kIndigoBlueColor900)),
                   itemText('Phòng:', '${listBill.roomNumber}',
-                      status: ref.watch(_controller).status,
+                      status: ref.watch(billController).status,
                       date: listBill.deadline!),
                   itemText('Ngày tạo:', '${listBill.dateCreate}',
-                      status: ref.watch(_controller).status,
+                      status: ref.watch(billController).status,
                       date: listBill.deadline!),
                   itemText('Ngày hết hạn:', '${listBill.deadline}',
                       color: kRedColor600,
-                      status: ref.watch(_controller).status,
+                      status: ref.watch(billController).status,
                       date: listBill.deadline!),
                 ],
               ),
