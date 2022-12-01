@@ -35,8 +35,7 @@ class BillModel {
   String? nameBill;
 
   factory BillModel.fromJson(Map<String, dynamic> json) => BillModel(
-        billId:
-            json["_id"] == null ? null : json["_id"],
+        billId: json["_id"] == null ? null : json["_id"],
         electricNumber:
             json["electricNumber"] == null ? null : json["electricNumber"],
         dateCreate: json["dateCreate"] ?? null,
@@ -134,18 +133,21 @@ class Payment {
     this.category,
     this.date,
     this.status,
+    this.images,
   });
 
   String? name;
   int? category;
   String? date;
   int? status;
+  String? images;
 
   factory Payment.fromJson(Map<String, dynamic> json) => Payment(
         name: json["name"] ?? null,
         category: json["category"] ?? null,
         date: json["date"] ?? null,
         status: json["status"] ?? null,
+        images: json["images"] ?? null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -153,12 +155,20 @@ class Payment {
         "category": category ?? null,
         "date": date ?? null,
         "status": status ?? null,
+        "images": images ?? null,
       };
 
-  String get textCategory {
+  String get getCategory {
     if (category == 0) {
       return "Tiền mặt";
     }
     return "Chuyển khoản";
+  }
+
+  String get getImage {
+    if (images == null) {
+      return "";
+    }
+    return images!;
   }
 }

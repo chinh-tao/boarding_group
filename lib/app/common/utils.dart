@@ -156,15 +156,10 @@ class Utils {
     return result;
   }
 
-  static Future<File?> handlePickerImage(ImageSource source) async {
+  static Future<File> handlePickerImage(ImageSource source) async {
     navKey.currentState!.pop();
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      return File(image!.path);
-    } on PlatformException catch (err) {
-      print("Image: $err");
-      Utils.messWarning(MSG_SYSTEM_HANDLE);
-      return null;
-    }
+    final image = await ImagePicker().pickImage(source: source);
+    if (image != null) return File(image.path);
+    return File("");
   }
 }

@@ -72,10 +72,12 @@ class ListBill extends ConsumerWidget {
 }
 
 Color? colorText(int status, String date) {
-  if (status == 0) {
-    return null;
+  if (DateTime.parse(date).difference(DateTime.now()).inDays <= 0 ||
+      status == 2 ||
+      status == 1) {
+    return Colors.white;
   }
-  return Colors.white;
+  return null;
 }
 
 Color? backgroundColor(WidgetRef ref, String date) {
@@ -88,8 +90,6 @@ Color? backgroundColor(WidgetRef ref, String date) {
         status == 2) {
       ref.read(billController.notifier).status = 2;
       return kRedColor400;
-    } else if (status == 3) {
-      return kOrangeColor800;
     }
     return null;
   }

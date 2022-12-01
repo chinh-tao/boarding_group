@@ -22,6 +22,7 @@ class BillController extends ChangeNotifier {
   var date = '';
   var userName = '';
   var room = '';
+  var image = '';
   var category = 'Tiền mặt';
   var categoryList = ['Tiền mặt', 'Chuyển khoản'];
   var format = DateFormat("yyyy-MM");
@@ -29,8 +30,7 @@ class BillController extends ChangeNotifier {
 
   void initData(WidgetRef ref) async {
     date = format.format(DateTime.now());
-    category = 'Tiền mặt';
-    fileImage = File("");
+    isClear();
     userName = ref.watch(Auth.user).getUserName;
     room = ref.watch(Auth.user).getRoomNumber;
     memberNumber = ref
@@ -42,7 +42,15 @@ class BillController extends ChangeNotifier {
     await loadDataBill(isRefresh: true);
   }
 
+  void isClear() {
+    category = 'Tiền mặt';
+    fileImage = File("");
+    notifyListeners();
+  }
+
   Future<void> loadDataBill({bool isRefresh = false}) async {
+    listBill.clear();
+    notifyListeners();
     final form = <String, dynamic>{"room": room, "month": date};
 
     if (isRefresh) isLoading = true;
@@ -52,23 +60,27 @@ class BillController extends ChangeNotifier {
     if (res.statusCode == 200 && res.data["code"] == 0) {
       final listData = res.data["payload"] as List;
       listBill = listData.map((data) => BillModel.fromJson(data)).toList();
-      if (listBill[0].payment != null) {
+      print("object123: ${listBill[0].payment}");
+      print("object123: ${listBill[0].payment!.isNotEmpty}");
+      if (listBill[0].payment!.isNotEmpty) {
         final listPayment = listBill[0].payment!;
         for (int i = 0; i < listPayment.length; i++) {
           if (listPayment[i].name == userName) {
             status = listPayment[i].status!;
-            category = listPayment[i].textCategory;
-            if (category == "Chuyển khoản" && status == 0) {
-              status = 3;
-            }
+            category = listPayment[i].getCategory;
+            image = listPayment[i].getImage;
             notifyListeners();
-            print("object: $status");
-            print("object12: $category");
           }
         }
       } else {
+        isClear();
         status = 0;
+        image = "";
+        notifyListeners();
       }
+      print("object: $image");
+      print("object1: $status");
+      print("object2: $category");
     } else {
       Utils.messError(res.data["message"]);
     }
@@ -100,7 +112,7 @@ class BillController extends ChangeNotifier {
   }
 
   void nextDetail(int index) {
-    if (status == 0) {
+    if (image.isEmpty) {
       billOnChanged("Tiền mặt");
     }
     navKey.currentState!.pushNamed(Routes.DETAIL_BILL, arguments: index);
@@ -150,11 +162,11 @@ class BillController extends ChangeNotifier {
         builder: (context) {
           return CustomBottomSheet(
             imageCamera: () async {
-              fileImage = (await Utils.handlePickerImage(ImageSource.camera))!;
+              fileImage = await Utils.handlePickerImage(ImageSource.camera);
               notifyListeners();
             },
             pickerImage: () async {
-              fileImage = (await Utils.handlePickerImage(ImageSource.gallery))!;
+              fileImage = await Utils.handlePickerImage(ImageSource.gallery);
               notifyListeners();
             },
           );

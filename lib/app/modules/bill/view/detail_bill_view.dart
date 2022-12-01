@@ -112,8 +112,8 @@ class DetailBillView extends ConsumerWidget {
                         value: watch.category,
                         list: watch.categoryList,
                         color: kIndigoBlueColor900,
-                        iconSize: watch.status == 0 ? null : 0,
-                        onChanged: watch.status == 0
+                        iconSize: watch.image.isEmpty ? null : 0,
+                        onChanged: watch.image.isEmpty
                             ? (value) => watch.billOnChanged(value)
                             : null),
                     ref.watch(showPayment),
@@ -131,7 +131,7 @@ class DetailBillView extends ConsumerWidget {
 
 final showPayment = Provider<Widget>((ref) {
   final watch = ref.watch(billController);
-  if (watch.category == "Tiền mặt" || watch.status == 3) {
+  if (watch.category == "Tiền mặt") {
     return const SizedBox.shrink();
   } else {
     return const ShowImage();
@@ -139,7 +139,8 @@ final showPayment = Provider<Widget>((ref) {
 });
 
 final showButtonPayment = Provider<Widget>((ref) {
-  if (ref.watch(billController).status != 0) {
+  if (ref.watch(billController).status != 0 ||
+      ref.watch(billController).image.isNotEmpty) {
     return const SizedBox.shrink();
   } else {
     return Padding(
@@ -185,8 +186,6 @@ Color? colorText(int status) {
     return kGreenColor700;
   } else if (status == 2) {
     return kRedColor600;
-  } else if (status == 3) {
-    return kOrangeColor800;
   }
   return null;
 }

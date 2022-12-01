@@ -12,10 +12,9 @@ class CustomImage extends ConsumerWidget {
       required this.height,
       required this.url,
       required this.errorWidget,
-      this.sizeTextLoading = 20,
       this.shape});
 
-  final double width, height, sizeTextLoading;
+  final double width, height;
   final String url;
   final BoxShape? shape;
   final Widget errorWidget;

@@ -61,10 +61,10 @@ class RegisterController extends ChangeNotifier {
         constraints: const BoxConstraints(maxHeight: 150),
         builder: (context) {
           return CustomBottomSheet(imageCamera: () async {
-            fileImage = (await Utils.handlePickerImage(ImageSource.camera))!;
+            fileImage = await Utils.handlePickerImage(ImageSource.camera);
             notifyListeners();
           }, pickerImage: () async {
-            fileImage = (await Utils.handlePickerImage(ImageSource.gallery))!;
+            fileImage = await Utils.handlePickerImage(ImageSource.gallery);
             notifyListeners();
           }, removeAvatar: () {
             Navigator.of(context).pop();
