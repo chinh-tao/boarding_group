@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -43,11 +42,11 @@ class SplashController extends ChangeNotifier {
             Routes.LIST_ACCOUNT, (route) => false,
             arguments: listUser);
       } else {
-        // if (!hasDevice) {
-        //   navKey.currentState!
-        //       .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
-        //   return;
-        // }
+        if (!hasDevice) {
+          navKey.currentState!
+              .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
+          return;
+        }
         navKey.currentState!.pushNamedAndRemoveUntil(
             Routes.LOGIN, (route) => false,
             arguments: {'category': '0'});

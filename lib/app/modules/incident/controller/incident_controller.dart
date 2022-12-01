@@ -7,7 +7,7 @@ import '../../../common/auth.dart';
 import '../../../common/utils.dart';
 
 class IncidentController extends ChangeNotifier {
-  var lisIncident = <IncidentModel>[];
+  var listIncident = <IncidentModel>[];
   final TextEditingController titleController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController roomController = TextEditingController();
@@ -26,6 +26,8 @@ class IncidentController extends ChangeNotifier {
     } else {
       nameController.text = ref.watch(Auth.user).getUserName;
       listErr = ["", ""];
+      titleController.clear();
+      contentController.clear();
       notifyListeners();
     }
   }
@@ -40,10 +42,10 @@ class IncidentController extends ChangeNotifier {
     if (res.statusCode == 200) {
       if (res.data['code'] == 0) {
         final convert = res.data['payload'] as List;
-        lisIncident =
+        listIncident =
             convert.map((data) => IncidentModel.fromJson(data)).toList();
       } else {
-        lisIncident.clear();
+        listIncident.clear();
       }
     } else {
       Utils.messError(res.data['message']);
@@ -90,7 +92,7 @@ class IncidentController extends ChangeNotifier {
       Utils.messSuccess(res.data["message"]);
       await loadDataIncident(ref);
       isLoadingButton = false;
-      Navigator.pop(navKey.currentContext!);
+      navKey.currentState!.pop();
       notifyListeners();
     } else {
       Utils.messError(res.data["message"]);

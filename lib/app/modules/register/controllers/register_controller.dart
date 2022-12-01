@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/global.dart';
-import 'package:boarding_group/app/modules/register/views/body/body_bottom_sheet.dart';
+import 'package:boarding_group/app/widget/custom_bottom_sheet.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-
 import '../../../common/auth.dart';
 
 class RegisterController extends ChangeNotifier {
@@ -56,7 +52,7 @@ class RegisterController extends ChangeNotifier {
     await registerAccount(ref);
   }
 
-  Future<void> showModalSheet() async {
+  Future<void> showModalSheet(WidgetRef ref) async {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -64,41 +60,18 @@ class RegisterController extends ChangeNotifier {
         context: navKey.currentContext!,
         constraints: const BoxConstraints(maxHeight: 150),
         builder: (context) {
-          return BodyBottomSheet(
-              imageCamera: () => handlePickerImage(ImageSource.camera),
-              pickerImage: () => handlePickerImage(ImageSource.gallery),
-              removeAvatar: () {
-                navKey.currentState!.pop();
-                fileImage = File('');
-                notifyListeners();
-              });
+          return CustomBottomSheet(imageCamera: () async {
+            fileImage = (await Utils.handlePickerImage(ImageSource.camera))!;
+            notifyListeners();
+          }, pickerImage: () async {
+            fileImage = (await Utils.handlePickerImage(ImageSource.gallery))!;
+            notifyListeners();
+          }, removeAvatar: () {
+            Navigator.of(context).pop();
+            fileImage = File('');
+            notifyListeners();
+          });
         });
-  }
-
-  Future<void> handlePickerImage(ImageSource source) async {
-    Navigator.of(navKey.currentContext!).pop();
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image != null) {
-        fileImage = File(image.path);
-      }
-      notifyListeners();
-    } on PlatformException catch (err) {
-      _log.e("Image: $err");
-      Utils.messWarning(MSG_SYSTEM_HANDLE);
-    }
-  }
-
-  Future<void> retrieveLostData() async {
-    final LostDataResponse res = await ImagePicker().retrieveLostData();
-    if (res.isEmpty) return;
-    if (res.file != null) {
-      fileImage = File(res.file!.path);
-      notifyListeners();
-    } else {
-      _log.e("Image(retrieveLostData): ${res.exception!.code}");
-      Utils.messWarning(MSG_SYSTEM_HANDLE);
-    }
   }
 
   Future<void> registerAccount(WidgetRef ref) async {

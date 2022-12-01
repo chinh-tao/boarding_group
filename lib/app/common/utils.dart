@@ -5,6 +5,11 @@ import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 import 'config.dart';
 
@@ -15,6 +20,9 @@ class Utils {
       FocusManager.instance.primaryFocus!.unfocus();
     }
   }
+
+  static String formatNumber(String s) =>
+      NumberFormat.decimalPattern().format(s.isEmpty ? 0 : int.parse(s));
 
   static void showMessage(
       {required Color color,
@@ -146,5 +154,17 @@ class Utils {
     final name = content.split(' ');
     final result = name.last[0];
     return result;
+  }
+
+  static Future<File?> handlePickerImage(ImageSource source) async {
+    navKey.currentState!.pop();
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      return File(image!.path);
+    } on PlatformException catch (err) {
+      print("Image: $err");
+      Utils.messWarning(MSG_SYSTEM_HANDLE);
+      return null;
+    }
   }
 }

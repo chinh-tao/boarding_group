@@ -21,7 +21,7 @@ class RegisterView extends ConsumerWidget {
               const SizedBox(height: 80),
               GestureDetector(
                 onTap: () =>
-                    ref.read(registerController.notifier).showModalSheet(),
+                    ref.read(registerController.notifier).showModalSheet(ref),
                 child: CircleAvatar(
                   foregroundImage:
                       ref.watch(registerController).fileImage.path != ''

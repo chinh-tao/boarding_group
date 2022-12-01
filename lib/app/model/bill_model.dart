@@ -5,12 +5,15 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import '../common/utils.dart';
+
 BillModel billModelFromJson(String str) => BillModel.fromJson(json.decode(str));
 
 String billModelToJson(BillModel data) => json.encode(data.toJson());
 
 class BillModel {
   BillModel({
+    this.billId,
     this.electricNumber,
     this.dateCreate,
     this.idBranch,
@@ -21,6 +24,7 @@ class BillModel {
     this.nameBill,
   });
 
+  String? billId;
   int? electricNumber;
   String? dateCreate;
   String? idBranch;
@@ -31,9 +35,10 @@ class BillModel {
   String? nameBill;
 
   factory BillModel.fromJson(Map<String, dynamic> json) => BillModel(
-        electricNumber: json["electricNumber"] == null
-            ? null
-            : json["electricNumber"],
+        billId:
+            json["_id"] == null ? null : json["_id"],
+        electricNumber:
+            json["electricNumber"] == null ? null : json["electricNumber"],
         dateCreate: json["dateCreate"] ?? null,
         idBranch: json["idBranch"] ?? null,
         bill: json["bill"] == null ? null : Bill.fromJson(json["bill"]),
@@ -47,6 +52,7 @@ class BillModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "_id": billId == null ? null : billId,
         "electricNumber": electricNumber == null ? null : electricNumber,
         "dateCreate": dateCreate ?? null,
         "idBranch": idBranch ?? null,
@@ -69,19 +75,18 @@ class Bill {
     this.water,
   });
 
-  double? electric;
-  double? general;
-  double? network;
-  double? room;
-  double? water;
+  int? electric;
+  int? general;
+  int? network;
+  int? room;
+  int? water;
 
   factory Bill.fromJson(Map<String, dynamic> json) => Bill(
-        electric:
-            json["electric"] == null ? null : json["electric"]!.toDouble(),
-        general: json["general"] == null ? null : json["general"]!.toDouble(),
-        network: json["network"] == null ? null : json["network"]!.toDouble(),
-        room: json["room"] == null ? null : json["room"]!.toDouble(),
-        water: json["water"] == null ? null : json["water"]!.toDouble(),
+        electric: json["electric"] == null ? null : json["electric"]!,
+        general: json["general"] == null ? null : json["general"]!,
+        network: json["network"] == null ? null : json["network"]!,
+        room: json["room"] == null ? null : json["room"]!,
+        water: json["water"] == null ? null : json["water"]!,
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,6 +96,36 @@ class Bill {
         "room": room ?? null,
         "water": water ?? null,
       };
+
+  String get getElectric {
+    var num = '$electric';
+    return Utils.formatNumber(num);
+  }
+
+  String get getGeneral {
+    var num = '$general';
+    return Utils.formatNumber(num);
+  }
+
+  String get getNetwork {
+    var num = '$network';
+    return Utils.formatNumber(num);
+  }
+
+  String get getRoom {
+    var num = '$room';
+    return Utils.formatNumber(num);
+  }
+
+  String get getWater {
+    var num = '$water';
+    return Utils.formatNumber(num);
+  }
+
+  int get sum {
+    final sum = electric! + general! + network! + room! + water!;
+    return sum;
+  }
 }
 
 class Payment {
@@ -102,7 +137,7 @@ class Payment {
   });
 
   String? name;
-  String? category;
+  int? category;
   String? date;
   int? status;
 
@@ -119,4 +154,11 @@ class Payment {
         "date": date ?? null,
         "status": status ?? null,
       };
+
+  String get textCategory {
+    if (category == 0) {
+      return "Tiền mặt";
+    }
+    return "Chuyển khoản";
+  }
 }

@@ -1,16 +1,20 @@
+import 'package:boarding_group/app/modules/incident/controller/incident_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/config.dart';
+import '../../../common/global.dart';
 import '../../../common/primary_style.dart';
+import '../../../model/incident_model.dart';
+import '../../../widget/item/item_invoice.dart';
 
 class IncidentDetail extends ConsumerWidget {
   const IncidentDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final arg =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final listIncident = arg['listIncident'];
+    final index =
+        int.parse(ModalRoute.of(context)!.settings.arguments.toString());
+    final listIncident = ref.watch(incidentController).listIncident[index];
 
     return Scaffold(
       appBar: AppBar(
@@ -19,7 +23,7 @@ class IncidentDetail extends ConsumerWidget {
         centerTitle: true,
         title: Text("Chi tiết sự cố", style: PrimaryStyle.normal(20)),
         leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => navKey.currentState!.pop(),
             icon: const Icon(Icons.arrow_back_ios)),
       ),
       body: SingleChildScrollView(
@@ -33,19 +37,37 @@ class IncidentDetail extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text('${listIncident.title}',
                       textAlign: TextAlign.center,
-                      style:
-                          PrimaryStyle.medium(20, color: kIndigoBlueColor900))),
+                      style: PrimaryStyle.normal(20, color: kBodyText))),
               const SizedBox(height: 5),
+              Center(
+                  child: RichText(
+                text: TextSpan(
+                    text: '(Tên: ${listIncident.userName}, mức độ: ',
+                    style: PrimaryStyle.normal(12, color: kBodyText),
+                    children: [
+                      TextSpan(
+                          text: '${listIncident.level}',
+                          style: PrimaryStyle.normal(12,
+                              color: colorLever(listIncident.level!))),
+                      TextSpan(
+                          text: ')',
+                          style: PrimaryStyle.normal(12, color: kBodyText))
+                    ]),
+              )),
+              const SizedBox(height: 10),
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: itemText(
-                      "${listIncident.level}", "${listIncident.date}",
-                      color: colorLever(listIncident.level!))),
+                  child: ItemInvoice(
+                      title: "",
+                      content: "${listIncident.date}",
+                      color2: listIncident.status == 1
+                          ? kGreenColor700
+                          : kBodyText)),
               const Divider(thickness: 2),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text("${listIncident.content}",
-                    style: PrimaryStyle.medium(16, color: kIndigoBlueColor900)),
+                    style: PrimaryStyle.medium(16, color: kBodyText)),
               ),
             ],
           ),
@@ -55,22 +77,11 @@ class IncidentDetail extends ConsumerWidget {
   }
 }
 
-Widget itemText(String title, String content, {Color? color}) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(title,
-          style: PrimaryStyle.medium(16, color: color ?? kIndigoBlueColor900)),
-      Text(content, style: PrimaryStyle.medium(16, color: kIndigoBlueColor900)),
-    ],
-  );
-}
-
 Color colorLever(String level) {
   if (level == "Cao") {
     return kRedColor600;
   } else if (level == "Trung bình") {
     return kOrangeColor800;
   }
-  return kIndigoBlueColor900;
+  return kBodyText;
 }

@@ -24,6 +24,7 @@ dependencies:
   flutter_spinkit:
   get_storage:
   month_picker_dialog: 0.4.0
+  dropdown_button2:
 
 dev_dependencies: 
   flutter_lints: 2.0.1
