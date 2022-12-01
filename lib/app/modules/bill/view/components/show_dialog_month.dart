@@ -1,11 +1,11 @@
 import 'package:boarding_group/app/modules/bill/controller/bill_controller.dart';
+import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../common/config.dart';
 import '../../../../common/global.dart';
 import '../../../../common/primary_style.dart';
-import '../../../../widget/button/button_loading.dart';
 
 class ShowDialogMonth extends ConsumerWidget {
   const ShowDialogMonth({Key? key}) : super(key: key);
@@ -25,12 +25,13 @@ class ShowDialogMonth extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: kBlackColor900.withOpacity(0.8))),
                 child: Text(ref.watch(billController).date,
-                    style: PrimaryStyle.medium(17, color: kIndigoBlueColor900))),
+                    style:
+                        PrimaryStyle.medium(17, color: kIndigoBlueColor900))),
           ),
           const SizedBox(height: 30),
-          ButtonLoading(
+          PrimaryButton(
               isLoading: false,
-              titleButton: "Tìm kiếm",
+              content: "Tìm kiếm",
               height: 50,
               width: double.infinity,
               sizeContent: 20,
