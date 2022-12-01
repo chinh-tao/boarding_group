@@ -2,8 +2,9 @@ import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomInput extends StatelessWidget {
+class CustomInput extends ConsumerWidget {
   const CustomInput(
       {Key? key,
       required this.controller,
@@ -36,12 +37,16 @@ class CustomInput extends StatelessWidget {
   final Function(String)? onChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title.isNotEmpty) ...[
-          Text(title, style: PrimaryStyle.medium(17, color: colorTitle)),
+          Padding(
+            padding: const EdgeInsets.only(left: 7),
+            child:
+                Text(title, style: PrimaryStyle.medium(17, color: colorTitle)),
+          ),
           const SizedBox(height: 5)
         ],
         Row(

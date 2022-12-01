@@ -32,15 +32,16 @@ class ForgotPassController extends ChangeNotifier {
     if (!validator) return;
     final form = {"id": inputCode.text, "email": inputEmail.text.trim()};
     isLoading = true;
+    notifyListeners();
     final res = await api.put('/forgot-pass', data: form);
     isLoading = false;
+    notifyListeners();
     if (res.statusCode == 200 && res.data["code"] == 0) {
-      Navigator.of(navKey.currentContext!).pop();
       Utils.messSuccess(res.data["message"]);
+      navKey.currentState!.pop();
     } else {
       Utils.messError(res.data['message']);
     }
-    notifyListeners();
   }
 
   void handleSetValue() {

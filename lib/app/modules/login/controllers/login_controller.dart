@@ -72,6 +72,7 @@ class LoginController extends ChangeNotifier {
       "device_mobi": ref.watch(Auth.device)
     };
     isLoading = true;
+    notifyListeners();
     final res = await api.post('/login', data: form);
     isLoading = false;
 
@@ -81,7 +82,7 @@ class LoginController extends ChangeNotifier {
       box.write('idBranch', res.data['payload']['id_branch']);
       ref.read(Auth.admin.notifier).state =
           AdminModel.fromJson(res.data['payload']);
-      Navigator.of(navKey.currentContext!)
+      navKey.currentState!
           .pushNamedAndRemoveUntil(Routes.ROOT, (route) => false);
     } else {
       Utils.messError(res.data['message']);

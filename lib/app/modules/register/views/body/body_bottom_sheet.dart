@@ -1,8 +1,9 @@
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/widget/item/item_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BodyBottomSheet extends StatelessWidget {
+class BodyBottomSheet extends ConsumerWidget {
   const BodyBottomSheet(
       {Key? key,
       required this.pickerImage,
@@ -15,7 +16,7 @@ class BodyBottomSheet extends StatelessWidget {
   final Function()? removeAvatar;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

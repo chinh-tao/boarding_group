@@ -10,10 +10,6 @@ import '../../../routes/app_pages.dart';
 import '../../../common/utils.dart';
 
 class SplashController extends ChangeNotifier {
-  void initData(context, WidgetRef ref) async {
-    await checkDevice(context, ref);
-  }
-
   Future<File> get localPath async {
     final director = await getTemporaryDirectory();
     final path =
@@ -33,7 +29,7 @@ class SplashController extends ChangeNotifier {
     return await Utils.getDevice();
   }
 
-  Future<void> checkDevice(context, WidgetRef ref) async {
+  Future<void> checkDevice(WidgetRef ref) async {
     ref.read(Auth.device.notifier).state = await getIdDevice;
     final form = {"device_mobi": ref.watch(Auth.device)};
     final res = await api.get('/check-device', queryParameters: form);
@@ -43,16 +39,16 @@ class SplashController extends ChangeNotifier {
       if (dataUser.isNotEmpty) {
         final listUser =
             dataUser.map((data) => UserModel.fromJson(data)).toList();
-        Navigator.of(context).pushNamedAndRemoveUntil(
+        navKey.currentState!.pushNamedAndRemoveUntil(
             Routes.LIST_ACCOUNT, (route) => false,
             arguments: listUser);
       } else {
         // if (!hasDevice) {
-        //   Navigator.of(context)
+        //   navKey.currentState!
         //       .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
         //   return;
         // }
-        Navigator.of(context).pushNamedAndRemoveUntil(
+        navKey.currentState!.pushNamedAndRemoveUntil(
             Routes.LOGIN, (route) => false,
             arguments: {'category': '0'});
       }

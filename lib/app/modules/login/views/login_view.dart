@@ -1,6 +1,7 @@
 import 'package:boarding_group/app/common/config.dart';
+import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
-import 'package:boarding_group/app/widget/button/button_loading.dart';
+import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:boarding_group/app/widget/button/second_text_button.dart';
 import 'package:boarding_group/app/widget/custom_input.dart';
 import 'package:boarding_group/app/widget/image/custom_image.dart';
@@ -60,12 +61,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 err: ref.watch(loginController).listErrLogin[1],
               ),
               const SizedBox(height: 40),
-              ButtonLoading(
+              PrimaryButton(
                   height: 55,
                   width: 170,
-                  sizeContent: 18,
+                  scale: 0.9,
+                  colors: kPrimaryColor,
                   isLoading: ref.watch(loginController).isLoading,
-                  titleButton: "Đăng nhập",
+                  sizeContent: 18,
+                  content: "Đăng nhập",
                   onPressed: () async =>
                       await ref.read(loginController.notifier).submit(ref)),
               const SizedBox(height: 22),
@@ -81,7 +84,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SecondTextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => navKey.currentState!.pop(),
                       title: 'Đổi tài khoản',
                       iconLeft: Icons.arrow_back_ios),
                 )

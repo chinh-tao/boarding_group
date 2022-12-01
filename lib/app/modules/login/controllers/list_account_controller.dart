@@ -33,7 +33,7 @@ class ListAccountController extends ChangeNotifier {
         builder: (context) {
           return BodyBottomSheet(
               removeAccount: () async {
-                Navigator.of(context).pop();
+                navKey.currentState!.pop();
                 showRemoveAccount(index, ref);
               },
               user: listUser[index]);
@@ -44,6 +44,7 @@ class ListAccountController extends ChangeNotifier {
     final form = {'email': email, 'device_mobi': ref.watch(Auth.device)};
 
     isLoading = true;
+    notifyListeners();
     final res = await api.delete('/remove-account', data: form);
     isLoading = false;
     if (res.statusCode == 200 && res.data['code'] == 0) {
@@ -51,7 +52,7 @@ class ListAccountController extends ChangeNotifier {
       if (listUser.isNotEmpty) {
         Utils.messSuccess(res.data['message']);
       } else {
-        Navigator.of(navKey.currentContext!)
+        navKey.currentState!
             .pushNamed(Routes.LOGIN, arguments: {'category': '0'});
       }
     } else {
@@ -64,7 +65,7 @@ class ListAccountController extends ChangeNotifier {
     Utils.showMessPopup(
         content: 'Bạn có muốn gỡ tài khoản này?',
         onPressed: () async {
-          Navigator.of(navKey.currentContext!).pop();
+          navKey.currentState!.pop();
           await handleRemoveAccount(listUser[index].email!, ref);
         });
   }
@@ -86,8 +87,7 @@ class ListAccountController extends ChangeNotifier {
   void handleShowPage() {
     isHideMenu = false;
     notifyListeners();
-    Navigator.of(navKey.currentContext!)
-        .pushNamed(Routes.LOGIN, arguments: {'category': '2'});
+    navKey.currentState!.pushNamed(Routes.LOGIN, arguments: {'category': '2'});
   }
 
   void handleClose() {

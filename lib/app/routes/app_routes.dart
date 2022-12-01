@@ -14,7 +14,7 @@ abstract class Routes {
   static const LIST_BILL = _Paths.LIST_BILL;
   static const DETAIL_BILL = _Paths.DETAIL_BILL;
   static const LIST_INCIDENT = _Paths.LIST_INCIDENT;
-  static const DETAIL_USER = _Paths.DETAIL_USER;
+  static const USER = _Paths.USER;
   static const ADD_INCIDENT = _Paths.ADD_INCIDENT;
   static const INCIDENTDETAIL = _Paths.INCIDENTDETAIL;
   static const ROOT = _Paths.ROOT;
@@ -31,7 +31,7 @@ abstract class _Paths {
   static const LIST_INCIDENT = '/list-incident';
   static const ADD_INCIDENT = '/add-incident';
   static const INCIDENTDETAIL = '/incident-detail';
-  static const DETAIL_USER = '/detail-user';
+  static const USER = '/user';
   static const SERVICE = '/service';
   static const LOGIN = '/login';
   static const REGISTER = '/register';

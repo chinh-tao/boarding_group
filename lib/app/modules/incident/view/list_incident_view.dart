@@ -77,7 +77,7 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: InkWell(
-            onTap: () => Navigator.of(context).pushNamed(Routes.INCIDENTDETAIL,
+            onTap: () => navKey.currentState!.pushNamed(Routes.INCIDENTDETAIL,
                 arguments: {'listIncident': listIncident}),
             borderRadius: BorderRadius.circular(10),
             child: Padding(

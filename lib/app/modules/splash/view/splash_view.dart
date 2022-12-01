@@ -14,23 +14,17 @@ class SplashView extends ConsumerStatefulWidget {
 
 class _SplashViewState extends ConsumerState<SplashView>
     with TickerProviderStateMixin {
-  late final AnimationController _animationController =
-      AnimationController(duration: const Duration(seconds: 2), vsync: this)
-        ..repeat(reverse: false);
-  late final Animation<double> animation =
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutQuint);
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(splashController.notifier).initData(context, ref);
+      ref.read(splashController.notifier).checkDevice(ref);
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    ref.watch(_animationController(this)).dispose();
     super.dispose();
   }
 
@@ -41,7 +35,7 @@ class _SplashViewState extends ConsumerState<SplashView>
         Container(
           alignment: Alignment.center,
           child: RotationTransition(
-            turns: animation,
+            turns: ref.watch(_animation(this)),
             child: Image.asset('assets/images/logo.png', height: 300),
           ),
         ),
@@ -53,3 +47,12 @@ class _SplashViewState extends ConsumerState<SplashView>
     );
   }
 }
+
+final _animationController =
+    Provider.family<AnimationController, TickerProvider>((ref, ticker) =>
+        AnimationController(duration: const Duration(seconds: 2), vsync: ticker)
+          ..repeat(reverse: false));
+final _animation = Provider.family<Animation<double>, TickerProvider>(
+    (ref, ticker) => CurvedAnimation(
+        parent: ref.watch(_animationController(ticker)),
+        curve: Curves.easeOutQuint));

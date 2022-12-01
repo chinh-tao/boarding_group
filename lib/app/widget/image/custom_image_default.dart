@@ -1,7 +1,8 @@
 import 'package:boarding_group/app/common/config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomImageDefault extends StatelessWidget {
+class CustomImageDefault extends ConsumerWidget {
   const CustomImageDefault(
       {Key? key,
       this.height = 80,
@@ -16,7 +17,7 @@ class CustomImageDefault extends StatelessWidget {
   final BoxShape? shape;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: height,
       width: width,

@@ -114,7 +114,7 @@ class Utils {
                 const EdgeInsets.only(bottom: 5, top: 23, left: 20, right: 20),
             actions: [
               TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => navKey.currentState!.pop(),
                   child: Text(
                     'hủy',
                     style: PrimaryStyle.medium(18, color: kIndigoBlueColor900),

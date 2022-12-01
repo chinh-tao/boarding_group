@@ -68,7 +68,7 @@ class RegisterController extends ChangeNotifier {
               imageCamera: () => handlePickerImage(ImageSource.camera),
               pickerImage: () => handlePickerImage(ImageSource.gallery),
               removeAvatar: () {
-                Navigator.of(context).pop();
+                navKey.currentState!.pop();
                 fileImage = File('');
                 notifyListeners();
               });
@@ -116,16 +116,17 @@ class RegisterController extends ChangeNotifier {
       };
     }
     isLoading = true;
+    notifyListeners();
     final res = await api.post('/register', data: form);
     isLoading = false;
+    notifyListeners();
     if (res.statusCode == 200 && res.data['code'] == 0) {
-      Navigator.of(navKey.currentContext!).pushNamedAndRemoveUntil(
+      navKey.currentState!.pushNamedAndRemoveUntil(
           Routes.LOGIN, (route) => false,
           arguments: {'category': '0'});
     } else {
       Utils.messError(res.data['message']);
     }
-    notifyListeners();
   }
 
   Future<void> handleCheckUser(String value) async {

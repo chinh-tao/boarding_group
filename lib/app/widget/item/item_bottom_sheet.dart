@@ -2,8 +2,9 @@ import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ItemBottomSheet extends StatelessWidget {
+class ItemBottomSheet extends ConsumerWidget {
   const ItemBottomSheet(
       {Key? key,
       required this.content,
@@ -21,7 +22,7 @@ class ItemBottomSheet extends StatelessWidget {
   final Color? iconColor, textColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: onTap,
       child: Container(

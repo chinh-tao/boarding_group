@@ -43,10 +43,10 @@ class IncidentController extends ChangeNotifier {
       } else {
         lisIncident.clear();
       }
-      notifyListeners();
     } else {
       Utils.messError(res.data['message']);
     }
+    notifyListeners();
   }
 
   void incidentOnChanged(String value) {

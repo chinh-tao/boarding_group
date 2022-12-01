@@ -1,3 +1,4 @@
+import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/modules/bill/controller/bill_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ final showListMember = Provider.autoDispose<Widget>((ref) {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: InkWell(
-            onTap: () => Navigator.of(context)
+            onTap: () => navKey.currentState!
                 .pushNamed(Routes.DETAIL_BILL, arguments: index),
             borderRadius: BorderRadius.circular(10),
             child: Padding(

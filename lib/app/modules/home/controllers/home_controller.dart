@@ -54,10 +54,10 @@ class HomeController extends ChangeNotifier {
       } else {
         listMember.clear();
       }
-      notifyListeners();
     } else {
       Utils.messError(res.data['message']);
     }
+    notifyListeners();
   }
 }
 

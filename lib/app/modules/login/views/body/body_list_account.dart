@@ -9,18 +9,10 @@ import '../../../../common/config.dart';
 import '../../../../common/global.dart';
 
 class BodyListAccount extends ConsumerWidget {
-  const BodyListAccount({Key? key, required this.controller}) : super(key: key);
-
-  final ChangeNotifierProvider<ListAccountController> controller;
+  const BodyListAccount({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.watch(controller).isLoading) {
-      return const Center(
-          child: Align(
-              alignment: Alignment.center,
-              child: CircularProgressIndicator(color: Colors.white)));
-    }
     return Center(
       child: SingleChildScrollView(
           child: Container(
@@ -39,17 +31,20 @@ class BodyListAccount extends ConsumerWidget {
               child: ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
-                  itemCount: ref.watch(controller).listUser.length,
+                  itemCount: ref.watch(listAccountController).listUser.length,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () => ref
-                          .read(controller.notifier)
+                          .read(listAccountController.notifier)
                           .showBottomSheet(index, ref),
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: (index + 1) !=
-                                        ref.watch(controller).listUser.length
+                                        ref
+                                            .watch(listAccountController)
+                                            .listUser
+                                            .length
                                     ? BorderSide(
                                         width: 2,
                                         color: kBodyText.withOpacity(0.3))
@@ -62,7 +57,7 @@ class BodyListAccount extends ConsumerWidget {
                                 width: 80,
                                 height: 80,
                                 url: ref
-                                    .watch(controller)
+                                    .watch(listAccountController)
                                     .listUser[index]
                                     .getImages,
                                 errorWidget: const CustomImageDefault(
@@ -73,14 +68,14 @@ class BodyListAccount extends ConsumerWidget {
                               children: [
                                 Text(
                                   ref
-                                      .watch(controller)
+                                      .watch(listAccountController)
                                       .listUser[index]
                                       .userName!,
                                   style: PrimaryStyle.bold(21),
                                 ),
                                 Text(
                                     ref
-                                        .watch(controller)
+                                        .watch(listAccountController)
                                         .listUser[index]
                                         .email!,
                                     style: PrimaryStyle.regular(18))

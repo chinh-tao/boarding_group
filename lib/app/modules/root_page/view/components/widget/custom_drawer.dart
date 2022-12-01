@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../common/auth.dart';
 import '../../../../../common/config.dart';
 import '../../../../../common/global.dart';
+import '../../../../../routes/app_pages.dart';
 import '../../../controller/root_controller.dart';
 
 class CustomDrawer extends ConsumerWidget {
@@ -34,28 +35,35 @@ class CustomDrawer extends ConsumerWidget {
                 Positioned(
                   left: 0,
                   bottom: 0,
-                  child: Container(
-                    width: 304,
-                    padding: const EdgeInsets.only(
-                        left: 10, top: 5, bottom: 5, right: 3),
-                    color: kBlackColor900.withOpacity(0.7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(ref.watch(Auth.user).getUserName,
-                                style:
-                                    PrimaryStyle.bold(25, color: kWhiteColor)),
-                            const SizedBox(height: 3),
-                            Text('id: ${ref.watch(Auth.user).getID}',
-                                style: PrimaryStyle.regular(17,
-                                    color: kWhiteColor))
-                          ],
-                        ),
-                        const Icon(Icons.arrow_forward_ios, color: kWhiteColor)
-                      ],
+                  child: InkWell(
+                    onTap: () {
+                      Scaffold.of(context).closeDrawer();
+                      navKey.currentState!.pushNamed(Routes.USER);
+                    },
+                    child: Container(
+                      width: 304,
+                      padding: const EdgeInsets.only(
+                          left: 10, top: 5, bottom: 5, right: 3),
+                      color: kBlackColor900.withOpacity(0.7),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(ref.watch(Auth.user).getUserName,
+                                  style: PrimaryStyle.bold(25,
+                                      color: kWhiteColor)),
+                              const SizedBox(height: 3),
+                              Text('id: ${ref.watch(Auth.user).getID}',
+                                  style: PrimaryStyle.regular(17,
+                                      color: kWhiteColor))
+                            ],
+                          ),
+                          const Icon(Icons.arrow_forward_ios,
+                              color: kWhiteColor)
+                        ],
+                      ),
                     ),
                   ),
                 )

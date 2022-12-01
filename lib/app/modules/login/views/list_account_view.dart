@@ -26,8 +26,18 @@ class _ListAccountViewState extends ConsumerState<ListAccountView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: BodyListAccount(controller: listAccountController),
+      body: ref.watch(showContent),
       floatingActionButton: const CustomMenu(),
     );
   }
 }
+
+final showContent = Provider<Widget>((ref) {
+  if (ref.watch(listAccountController).isLoading) {
+    return const Center(
+        child: Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(color: Colors.white)));
+  }
+  return const BodyListAccount();
+});

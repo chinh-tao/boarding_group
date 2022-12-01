@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/config.dart';
 import '../../common/primary_style.dart';
 
-class SecondTextButton extends StatelessWidget {
+class SecondTextButton extends ConsumerWidget {
   const SecondTextButton(
       {Key? key,
       required this.onPressed,
@@ -17,7 +17,7 @@ class SecondTextButton extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FittedBox(
       fit: BoxFit.fill,
       child: TextButton(

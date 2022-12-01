@@ -1,6 +1,6 @@
 import 'package:boarding_group/app/common/config.dart';
 import 'package:boarding_group/app/common/global.dart';
-import 'package:boarding_group/app/widget/button/button_loading.dart';
+import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:boarding_group/app/widget/custom_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,13 +34,13 @@ class ForgotPassView extends ConsumerWidget {
                   hintText: 'tài khoản email',
                   err: ref.watch(forgotPassController).listError[1]),
               const SizedBox(height: 35),
-              ButtonLoading(
+              PrimaryButton(
                   height: 50,
                   width: 170,
+                  content: 'GỬI',
                   sizeContent: 16,
                   colors: kIndigoBlueColor900,
                   isLoading: ref.watch(forgotPassController).isLoading,
-                  titleButton: 'GỬI',
                   onPressed: () async =>
                       await ref.read(forgotPassController.notifier).submit())
             ],

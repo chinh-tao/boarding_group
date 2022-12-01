@@ -1,5 +1,5 @@
 import 'package:boarding_group/app/common/global.dart';
-import 'package:boarding_group/app/widget/button/button_loading.dart';
+import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,11 +28,10 @@ class SearchListMember extends ConsumerWidget {
               controller: ref.watch(homeController).inputRoom,
               err: ''),
           const SizedBox(height: 23),
-          ButtonLoading(
-              isLoading: false,
-              titleButton: "Tìm kiếm",
+          PrimaryButton(
               height: 50,
               width: double.infinity,
+              content: "Tìm kiếm",
               sizeContent: 20,
               onPressed: () async {
                 navKey.currentState!.pop();
