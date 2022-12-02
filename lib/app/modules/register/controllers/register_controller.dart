@@ -52,7 +52,7 @@ class RegisterController extends ChangeNotifier {
     await registerAccount(ref);
   }
 
-  Future<void> showModalSheet(WidgetRef ref) async {
+  void showModalSheet(WidgetRef ref) {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -81,11 +81,9 @@ class RegisterController extends ChangeNotifier {
       "device_mobi": ref.watch(Auth.device)
     };
     if (fileImage.path != '') {
-      final filedName = fileImage.path.split('/').last;
-      final typeFiled = filedName.split('.').last;
       form["images"] = {
         "file": base64Encode(fileImage.readAsBytesSync()),
-        "type": typeFiled
+        "type": Utils.getTypeImage(fileImage.path)
       };
     }
     isLoading = true;

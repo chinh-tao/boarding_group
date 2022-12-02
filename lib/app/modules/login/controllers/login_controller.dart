@@ -2,12 +2,13 @@ import 'package:boarding_group/app/common/auth.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/model/admin_model.dart';
 import 'package:boarding_group/app/model/user_model.dart';
-import 'package:boarding_group/app/modules/forgot_pass/views/forgot_pass_view.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:boarding_group/app/common/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+
+import '../../password/views/forgot_pass_view.dart';
 
 class LoginController extends ChangeNotifier {
   TextEditingController inputEmail = TextEditingController();

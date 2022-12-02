@@ -1,5 +1,6 @@
 import 'package:boarding_group/app/modules/bill/view/detail_bill_view.dart';
 import 'package:boarding_group/app/modules/bill/view/list_bill_view.dart';
+import 'package:boarding_group/app/modules/home/views/components/body/detail_member_view.dart';
 import 'package:boarding_group/app/modules/incident/view/add_incident_view.dart';
 import 'package:boarding_group/app/modules/incident/view/incident_detail.dart';
 import 'package:boarding_group/app/modules/incident/view/list_incident_view.dart';
@@ -33,6 +34,7 @@ class AppPages {
     Routes.ADD_INCIDENT: (_) => const AddIncidentView(),
     Routes.INCIDENTDETAIL: (_) => const IncidentDetail(),
     Routes.USER: (_) => const UserView(),
+    Routes.DETAIL_MEMBER: (_) => const DetailMemberView(),
     Routes.ROOT: (_) => const RootView(),
     Routes.SERVICE: (_) => const ServiceView()
   };

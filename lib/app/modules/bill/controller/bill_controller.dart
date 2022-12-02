@@ -131,11 +131,9 @@ class BillController extends ChangeNotifier {
     };
 
     if (fileImage.path != '') {
-      final filedName = fileImage.path.split('/').last;
-      final typeFiled = filedName.split('.').last;
       form["images"] = {
         "file": base64Encode(fileImage.readAsBytesSync()),
-        "type": typeFiled
+        "type": Utils.getTypeImage(fileImage.path)
       };
     }
 

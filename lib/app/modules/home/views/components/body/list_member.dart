@@ -1,5 +1,5 @@
 import 'package:boarding_group/app/common/global.dart';
-import 'package:boarding_group/app/model/user_model.dart';
+import 'package:boarding_group/app/modules/home/controllers/home_controller.dart';
 import 'package:boarding_group/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,24 +10,19 @@ import '../../../../../widget/image/custom_image.dart';
 import '../../../../../widget/image/custom_image_default.dart';
 
 class ListMember extends ConsumerWidget {
-  const ListMember({super.key, required this.listMember});
-
-  final List<UserModel> listMember;
+  const ListMember({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (listMember.isEmpty) {
-      return Center(
-        child: Text('Không tìm thấy dữ liệu',
-            style: PrimaryStyle.bold(20, color: kRedColor400)),
-      );
-    }
+    final listMember = ref.watch(homeController).listMember;
+
     return ListView.builder(
         itemCount: listMember.length,
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: () {},
+            onTap: () => navKey.currentState!
+                .pushNamed(Routes.DETAIL_MEMBER, arguments: index),
             child: Container(
               margin: EdgeInsets.only(bottom: 5, top: index == 0 ? 15 : 5),
               padding: const EdgeInsets.symmetric(horizontal: 7),

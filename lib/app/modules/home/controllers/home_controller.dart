@@ -50,6 +50,7 @@ class HomeController extends ChangeNotifier {
     if (res.statusCode == 200) {
       if (res.data['code'] == 0) {
         final convert = res.data['payload'] as List;
+        listMember.clear();
         listMember = convert.map((data) => UserModel.fromJson(data)).toList();
       } else {
         listMember.clear();

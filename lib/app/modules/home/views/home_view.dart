@@ -48,7 +48,11 @@ final showListMember = Provider<Widget>((ref) {
     return const Center(
       child: CircularProgressIndicator(color: kIndigoBlueColor900),
     );
-  } else {
-    return ListMember(listMember: ref.watch(homeController).listMember);
+  } else if (ref.watch(homeController).listMember.isEmpty) {
+    return Center(
+      child: Text('Không tìm thấy dữ liệu',
+          style: PrimaryStyle.bold(20, color: kRedColor400)),
+    );
   }
+  return const ListMember();
 });

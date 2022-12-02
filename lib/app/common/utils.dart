@@ -162,4 +162,10 @@ class Utils {
     if (image != null) return File(image.path);
     return File("");
   }
+
+  static String getTypeImage(String path) {
+    final filedName = path.split('/').last;
+    final typeFiled = filedName.split('.').last;
+    return typeFiled;
+  }
 }

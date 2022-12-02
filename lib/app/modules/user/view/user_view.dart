@@ -6,6 +6,7 @@ import 'package:boarding_group/app/widget/button/primary_button.dart';
 import 'package:boarding_group/app/widget/button/second_outlined_button.dart';
 import 'package:boarding_group/app/widget/custom_input.dart';
 import 'package:boarding_group/app/widget/image/custom_image.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -44,20 +45,30 @@ class _UserViewState extends ConsumerState<UserView> {
                 children: [
                   const SizedBox(height: 40),
                   Center(
-                    child: CustomImage(
-                        width: 200,
-                        height: 200,
-                        url: ref.watch(Auth.user).getImages,
-                        errorWidget: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          color: kPrimaryColor,
-                        )),
-                  ),
+                      child: Stack(
+                    children: [
+                      ref.watch(showImage),
+                      Positioned(
+                          left: 165,
+                          top: 140,
+                          child: GestureDetector(
+                            onTap: () =>
+                                ref.watch(userController).showModalSheet(ref),
+                            child: Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: const BoxDecoration(
+                                  color: kYellowColor800,
+                                  shape: BoxShape.circle),
+                              child: const Icon(Icons.image_rounded,
+                                  color: kWhiteColor, size: 20),
+                            ),
+                          ))
+                    ],
+                  )),
                   const SizedBox(height: 30),
                   Container(
                     width: size.width,
-                    constraints: const BoxConstraints(minHeight: 630),
+                    height: ref.watch(_maxHeight),
                     decoration: BoxDecoration(
                         color: kWhiteColor,
                         boxShadow: [
@@ -73,7 +84,7 @@ class _UserViewState extends ConsumerState<UserView> {
                             topRight: Radius.circular(20))),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 20, bottom: 0),
+                          left: 20, right: 20, top: 20, bottom: 10),
                       child: Column(
                         children: [
                           CustomInput(
@@ -93,12 +104,16 @@ class _UserViewState extends ConsumerState<UserView> {
                           CustomInput(
                               controller: ref.watch(userController).inputEmail,
                               title: 'Tài khoản email',
-                              err: ''),
+                              err: ref.watch(userController).listErr[0]),
                           const SizedBox(height: 10),
                           CustomInput(
                               controller: ref.watch(userController).inputPhone,
                               title: 'Số điện thoại',
-                              err: ''),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              err: ref.watch(userController).listErr[1]),
                           const SizedBox(height: 10),
                           CustomInput(
                               controller: ref.watch(userController).inputRoom,
@@ -114,7 +129,9 @@ class _UserViewState extends ConsumerState<UserView> {
                                   height: 55,
                                   width: ref.watch(_maxWidth),
                                   title: 'Đổi mật khẩu',
-                                  onPressed: () {},
+                                  onPressed: () => ref
+                                      .watch(userController)
+                                      .showChangePass(),
                                   sizeText: 20,
                                   borderRadius: 30,
                                   color: kIndigoBlueColor900),
@@ -138,7 +155,7 @@ class _UserViewState extends ConsumerState<UserView> {
                     ),
                   )
                 ],
-              )
+              ),
             ],
           ),
         ));
@@ -150,4 +167,34 @@ final _maxWidth = Provider<double>((ref) {
     return size.width;
   }
   return size.width / 2.4;
+});
+
+final _maxHeight = Provider<double>((ref) {
+  if (size.height <= 846) {
+    return 630;
+  }
+  return size.height - 270;
+});
+
+final showImage = Provider.autoDispose<Widget>((ref) {
+  if (ref.watch(userController).fileImage.path.isEmpty) {
+    return CustomImage(
+        width: 200,
+        height: 200,
+        url: ref.watch(Auth.user).getImages,
+        errorWidget: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: kPrimaryColor,
+        ));
+  }
+  return Container(
+    height: 200,
+    width: 200,
+    decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: FileImage(ref.watch(userController).fileImage),
+            fit: BoxFit.cover)),
+  );
 });

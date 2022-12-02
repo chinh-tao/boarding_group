@@ -1,8 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:boarding_group/app/common/auth.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/utils.dart';
+import 'package:boarding_group/app/model/user_model.dart';
+import 'package:boarding_group/app/modules/home/controllers/home_controller.dart';
+import 'package:boarding_group/app/modules/password/views/change_pass_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../widget/custom_bottom_sheet.dart';
 
 class UserController extends ChangeNotifier {
   TextEditingController inputID = TextEditingController();
@@ -12,6 +21,8 @@ class UserController extends ChangeNotifier {
   TextEditingController inputRoom = TextEditingController();
 
   var isLoading = false;
+  var listErr = <String>[];
+  var fileImage = File("");
 
   void initData(WidgetRef ref) {
     inputID.text = ref.watch(Auth.user).getID;
@@ -19,20 +30,52 @@ class UserController extends ChangeNotifier {
     inputPhone.text = ref.watch(Auth.user).getPhone;
     inputName.text = ref.watch(Auth.user).getUserName;
     inputRoom.text = ref.watch(Auth.user).getRoomNumber;
+    listErr = List.filled(2, '');
     notifyListeners();
   }
 
-  // bool validator(WidgetRef ref) {
+  bool validator(WidgetRef ref) {
+    var result = true;
+    listErr = List.filled(2, '');
+    if (inputEmail.text.trim().isEmpty) {
+      listErr[0] = 'thông tin không được để trống';
+      result = false;
+    } else if (!regexEmail.hasMatch(inputEmail.text)) {
+      listErr[0] = 'email không đúng định dạng';
+      result = false;
+    }
 
-  // }
+    if (inputPhone.text.trim().isEmpty) {
+      listErr[1] = 'thông tin không được để trống';
+      result = false;
+    }
+
+    if ((inputEmail.text.trim() == ref.watch(Auth.user).getEmail) &&
+        (inputPhone.text.trim() == ref.watch(Auth.user).getPhone) &&
+        fileImage.path.isEmpty) {
+      Utils.messWarning(
+          'Không thể cập thông tin khi thông tin chưa được thay đổi.');
+      result = false;
+    }
+    notifyListeners();
+    return result;
+  }
 
   Future<void> handleUpdateUser(WidgetRef ref) async {
-    final form = {"id": ref.watch(Auth.user).getID};
+    Utils.handleUnfocus();
+    if (!validator(ref)) return;
+    final form = <String, dynamic>{"id": ref.watch(Auth.user).getID};
     if (inputEmail.text.trim() != ref.watch(Auth.user).getEmail) {
-      form['email'] = inputEmail.text.trim();
+      form['email'] = inputEmail.text;
     }
     if (inputPhone.text.trim() != ref.watch(Auth.user).getPhone) {
-      form['phone'] = inputPhone.text.trim();
+      form['phone'] = inputPhone.text;
+    }
+    if (fileImage.path.isNotEmpty) {
+      form["images"] = {
+        "file": base64Encode(fileImage.readAsBytesSync()),
+        "type": Utils.getTypeImage(fileImage.path)
+      };
     }
     isLoading = true;
     notifyListeners();
@@ -41,13 +84,50 @@ class UserController extends ChangeNotifier {
     notifyListeners();
 
     if (res.statusCode == 200 && res.data["code"] == 0) {
-      ref.read(Auth.user.notifier).state.email = inputEmail.text.trim();
       Utils.messSuccess(res.data['message']);
+      await ref.read(homeController.notifier).getListMember(ref);
+      final member = ref
+          .watch(homeController)
+          .listMember
+          .where((data) => data.id == ref.watch(Auth.user).getID)
+          .toList();
+      ref.read(Auth.user.notifier).state = member[0];
     } else {
       Utils.messError(res.data['message']);
     }
   }
+
+  void showChangePass() {
+    showDialog(
+        context: navKey.currentContext!,
+        builder: (context) => AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: const ChangePassView()));
+  }
+
+  void showModalSheet(WidgetRef ref) {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: navKey.currentContext!,
+        constraints: const BoxConstraints(maxHeight: 150),
+        builder: (context) {
+          return CustomBottomSheet(imageCamera: () async {
+            fileImage = await Utils.handlePickerImage(ImageSource.camera);
+            notifyListeners();
+          }, pickerImage: () async {
+            fileImage = await Utils.handlePickerImage(ImageSource.gallery);
+            notifyListeners();
+          }, removeAvatar: () {
+            Navigator.of(context).pop();
+            fileImage = File('');
+            notifyListeners();
+          });
+        });
+  }
 }
 
-final userController =
-    ChangeNotifierProvider<UserController>((ref) => UserController());
+final userController = ChangeNotifierProvider.autoDispose<UserController>(
+    (ref) => UserController());
