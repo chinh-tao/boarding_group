@@ -28,10 +28,12 @@ class SplashController extends ChangeNotifier {
     return await Utils.getDevice();
   }
 
-  Future<void> checkDevice(WidgetRef ref) async {
+  Future<void> checkDevice(WidgetRef ref, {bool isLoading = false}) async {
     ref.read(Auth.device.notifier).state = await getIdDevice;
     final form = {"device_mobi": ref.watch(Auth.device)};
+    if (isLoading) Utils.showPopupLoading();
     final res = await api.get('/check-device', queryParameters: form);
+    if (isLoading) navKey.currentState!.pop();
     if (res.statusCode == 200 && res.data['code'] == 0) {
       final dataUser = res.data['payload']['data_user'] as List;
       final hasDevice = res.data['payload']['has_device'] as bool;
@@ -42,11 +44,11 @@ class SplashController extends ChangeNotifier {
             Routes.LIST_ACCOUNT, (route) => false,
             arguments: listUser);
       } else {
-        if (!hasDevice) {
-          navKey.currentState!
-              .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
-          return;
-        }
+        // if (!hasDevice) {
+        //   navKey.currentState!
+        //       .pushNamedAndRemoveUntil(Routes.REGISTER, (route) => false);
+        //   return;
+        // }
         navKey.currentState!.pushNamedAndRemoveUntil(
             Routes.LOGIN, (route) => false,
             arguments: {'category': '0'});
@@ -57,5 +59,5 @@ class SplashController extends ChangeNotifier {
   }
 }
 
-final splashController =
-    ChangeNotifierProvider<SplashController>((ref) => SplashController());
+final splashController = ChangeNotifierProvider.autoDispose<SplashController>(
+    (ref) => SplashController());

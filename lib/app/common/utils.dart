@@ -5,11 +5,8 @@ import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/primary_style.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import 'config.dart';
@@ -36,42 +33,46 @@ class Utils {
         context: navKey.currentContext!,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-            title: Column(children: [
-              Align(
-                alignment: alignment,
-                child: Text(text,
-                    style: const TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                    textAlign: textAlign),
-              ),
-              if (duration == 0) ...[
-                const SizedBox(height: 20),
-                Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          fixedSize: const Size(100, 45),
-                          side:
-                              const BorderSide(color: Colors.white, width: 2)),
-                      onPressed: onPressed,
-                      child: const Text("OK",
-                          style: TextStyle(fontSize: 14, color: Colors.white))),
-                )
-              ]
-            ]),
-            titlePadding:
-                const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            content: SizedBox(width: size.width),
-            contentPadding: EdgeInsets.zero,
-            actionsPadding: EdgeInsets.zero,
-            insetPadding: EdgeInsets.zero,
-            backgroundColor: color,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(0))),
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              title: Column(children: [
+                Align(
+                  alignment: alignment,
+                  child: Text(text,
+                      style: const TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      textAlign: textAlign),
+                ),
+                if (duration == 0) ...[
+                  const SizedBox(height: 20),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            fixedSize: const Size(100, 45),
+                            side: const BorderSide(
+                                color: Colors.white, width: 2)),
+                        onPressed: onPressed,
+                        child: const Text("OK",
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.white))),
+                  )
+                ]
+              ]),
+              titlePadding:
+                  const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              content: SizedBox(width: size.width),
+              contentPadding: EdgeInsets.zero,
+              actionsPadding: EdgeInsets.zero,
+              insetPadding: EdgeInsets.zero,
+              backgroundColor: color,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(0))),
+            ),
           );
         });
 
@@ -139,6 +140,33 @@ class Utils {
         });
   }
 
+  static void showPopupLoading() {
+    showDialog(
+        barrierDismissible: false,
+        context: navKey.currentContext!,
+        builder: (context) => WillPopScope(
+              onWillPop: () async => false,
+              child: SimpleDialog(
+                  backgroundColor: Colors.black54,
+                  children: <Widget>[
+                    Center(
+                      child: Column(children: [
+                        const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'vui lòng đợi trong giây lát...',
+                          style: PrimaryStyle.normal(16, color: Colors.white),
+                        )
+                      ]),
+                    )
+                  ]),
+            ));
+  }
+
   static Future<String> getDevice() async {
     final DeviceInfoPlugin _device = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -149,12 +177,6 @@ class Utils {
       return "${ios.identifierForVendor}";
     }
     return 'Zzz...';
-  }
-
-  static String getSubStringUserName(String content) {
-    final name = content.split(' ');
-    final result = name.last[0];
-    return result;
   }
 
   static Future<File> handlePickerImage(ImageSource source) async {

@@ -9,24 +9,22 @@ import '../../../../../routes/app_pages.dart';
 import '../../../controller/root_controller.dart';
 
 class CustomDrawer extends ConsumerWidget {
-  const CustomDrawer({super.key, required this.controller});
-
-  final ChangeNotifierProvider<RootController> controller;
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
-      child: SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 180,
+              height: 220,
               width: double.infinity,
               color: kGreyColor400,
               child: Stack(children: [
                 CustomImage(
                     width: size.width,
-                    height: 180,
+                    height: 220,
                     url: ref.watch(Auth.user).getImages,
                     shape: BoxShape.rectangle,
                     errorWidget: const Center(
@@ -37,7 +35,11 @@ class CustomDrawer extends ConsumerWidget {
                   bottom: 0,
                   child: InkWell(
                     onTap: () {
-                      Scaffold.of(context).closeDrawer();
+                      ref
+                          .watch(rootController)
+                          .rootKey
+                          .currentState!
+                          .closeDrawer();
                       navKey.currentState!.pushNamed(Routes.USER);
                     },
                     child: Container(
@@ -69,28 +71,40 @@ class CustomDrawer extends ConsumerWidget {
                 )
               ]),
             ),
-            ListView(shrinkWrap: true, children: [
-              itemMenu(
-                  Icons.checklist_outlined, 'Danh sách thành viên', ref, 0),
-              itemMenu(Icons.assignment_outlined, 'Hoá đơn', ref, 1),
-              itemMenu(Icons.assignment_late_outlined, 'Sự cố', ref, 2),
-              itemMenu(Icons.bookmark_outline_outlined, 'Dịch vụ', ref, 3)
-            ]),
+            options(Icons.checklist_outlined, 'Danh sách thành viên', ref, 0),
+            options(Icons.assignment_outlined, 'Hoá đơn', ref, 1),
+            options(Icons.assignment_late_outlined, 'Sự cố', ref, 2),
+            options(Icons.bookmark_outline_outlined, 'Dịch vụ', ref, 3),
+            options(Icons.info_outlined, 'Thông tin', ref, 4),
+            options(Icons.logout_outlined, 'Đăng xuất', ref, 5)
           ],
         ),
       ),
     );
   }
 
-  Widget itemMenu(IconData icons, String title, WidgetRef ref, int index) {
+  Widget options(IconData icons, String title, WidgetRef ref, int index) {
     return ListTile(
-      onTap: () => ref.read(controller.notifier).handleChangeIndex(index),
-      tileColor: ref.watch(controller).isSelected[index]
-          ? kGreenColor700.withOpacity(0.3)
-          : null,
-      leading: Icon(icons, color: kIndigoBlueColor900, size: 30),
+      onTap: () =>
+          ref.read(rootController.notifier).handleChangeIndex(index, ref),
+      tileColor: ref.watch(background(index)),
+      leading: Icon(icons, color: ref.watch(colors(index)), size: 30),
       title: Text(title,
-          style: PrimaryStyle.normal(20, color: kIndigoBlueColor900)),
+          style: PrimaryStyle.bold(20, color: ref.watch(colors(index)))),
     );
   }
 }
+
+final background = Provider.autoDispose.family<Color?, int>((ref, index) {
+  if (ref.watch(rootController).isSelected[index]) {
+    return kGreenColor700.withOpacity(0.3);
+  }
+  return null;
+});
+
+final colors = Provider.autoDispose.family<Color?, int>((ref, index) {
+  if (ref.watch(rootController).isSelected[index]) {
+    return kIndigoBlueColor900;
+  }
+  return kBodyText;
+});

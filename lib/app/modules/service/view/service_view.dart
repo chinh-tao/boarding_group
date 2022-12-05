@@ -12,10 +12,7 @@ class ServiceView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 5),
-          child: Text("Dịch vụ", style: PrimaryStyle.bold(20)),
-        ),
+        const SizedBox(height: 7),
         Expanded(
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
+import '../../../widget/image/custom_image_default.dart';
+
 class UserView extends ConsumerStatefulWidget {
   const UserView({super.key});
 
@@ -182,11 +184,11 @@ final showImage = Provider.autoDispose<Widget>((ref) {
         width: 200,
         height: 200,
         url: ref.watch(Auth.user).getImages,
-        errorWidget: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: kPrimaryColor,
-        ));
+        errorWidget: const CustomImageDefault(
+            iconSize: 150,
+            height: 200,
+            width: 200,
+            backgroundColor: kGreyColor400));
   }
   return Container(
     height: 200,

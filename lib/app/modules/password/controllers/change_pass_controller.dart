@@ -9,6 +9,8 @@ class ChangePassController extends ChangeNotifier {
   TextEditingController inputConfirm = TextEditingController();
   TextEditingController inputNewPass = TextEditingController();
 
+  var isHidePassNew = true;
+  var isHidePassConfirm = true;
   var isLoading = false;
   var listErr = <String>["", "", ""];
   var regexPass = RegExp(
@@ -63,6 +65,15 @@ class ChangePassController extends ChangeNotifier {
     } else {
       Utils.messError(res.data['message']);
     }
+  }
+
+  void handleShowPass(int type) {
+    if (type == 0) {
+      isHidePassNew = !isHidePassNew;
+    } else {
+      isHidePassConfirm = !isHidePassConfirm;
+    }
+    notifyListeners();
   }
 }
 

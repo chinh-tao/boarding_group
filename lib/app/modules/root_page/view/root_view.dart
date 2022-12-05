@@ -1,6 +1,7 @@
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/modules/root_page/controller/root_controller.dart';
 import 'package:boarding_group/app/modules/root_page/view/components/widget/custom_drawer.dart';
+import 'package:boarding_group/app/modules/root_page/view/components/widget/menu_list_incident.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import '../../../common/config.dart';
@@ -17,21 +18,28 @@ class RootView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      key: ref.watch(rootController).rootKey,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: kPrimaryColor,
         centerTitle: true,
-        actions: ref.watch(action) != null ? [ref.watch(action)!] : [],
+        actions: [
+          IconButton(
+              onPressed: () =>
+                  navKey.currentState!.pushNamed(Routes.NOTIFICATION),
+              icon: const Icon(Icons.notifications_sharp))
+        ],
       ),
-      drawer: CustomDrawer(controller: rootController),
+      drawerEnableOpenDragGesture: false,
+      drawer: const CustomDrawer(),
       endDrawer: ref.watch(endDrawer),
       body: ref.watch(page),
-      floatingActionButton: ref.watch(actionButton),
+      floatingActionButton: ref.watch(actionButton(context)),
     );
   }
 }
 
-final page = Provider<Widget>((ref) {
+final page = Provider.autoDispose<Widget>((ref) {
   switch (ref.watch(rootController).index) {
     case 1:
       return const ListBillView();
@@ -44,7 +52,8 @@ final page = Provider<Widget>((ref) {
   }
 });
 
-final actionButton = Provider<Widget?>((ref) {
+final actionButton =
+    Provider.autoDispose.family<Widget?, BuildContext>((ref, context) {
   if (ref.watch(rootController).index == 0) {
     return FloatingActionButton(
       onPressed: () => ref.read(rootController.notifier).showSearchView(),
@@ -57,31 +66,14 @@ final actionButton = Provider<Widget?>((ref) {
         onPressed: () => ref.read(rootController.notifier).showSearchBillView(),
         child: const Icon(Icons.calendar_month_sharp));
   } else if (ref.watch(rootController).index == 2) {
-    return FloatingActionButton(
-        backgroundColor: kPrimaryColor,
-        onPressed: () => navKey.currentState!.pushNamed(Routes.ADD_INCIDENT),
-        child: const Icon(Icons.add));
+    return const MenuListIncident();
   }
   return null;
 });
 
-final endDrawer = Provider<Widget?>((ref) {
+final endDrawer = Provider.autoDispose<Widget?>((ref) {
   if (ref.watch(rootController).index == 2) {
     return const SearchIncident();
-  }
-  return null;
-});
-
-final action = Provider<Widget?>((ref) {
-  if (ref.watch(rootController).index == 0) {
-    return IconButton(
-        onPressed: () => navKey.currentState!.pushNamed(Routes.NOTIFICATION),
-        icon: const Icon(Icons.notifications_sharp));
-  } else if (ref.watch(rootController).index == 2) {
-    return Builder(
-        builder: (context) => IconButton(
-            onPressed: () => Scaffold.of(context).openEndDrawer(),
-            icon: const Icon(Icons.filter_list_alt, size: 20)));
   }
   return null;
 });

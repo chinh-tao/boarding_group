@@ -90,13 +90,8 @@ class ListAccountController extends ChangeNotifier {
     navKey.currentState!.pushNamed(Routes.LOGIN, arguments: {'category': '2'});
   }
 
-  void handleClose() {
-    isHideMenu = false;
-    notifyListeners();
-  }
-
-  void handleOpen() {
-    isHideMenu = true;
+  void handleShowMenu() {
+    isHideMenu = !isHideMenu;
     notifyListeners();
   }
 }

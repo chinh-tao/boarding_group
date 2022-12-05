@@ -25,10 +25,6 @@ class _ListBillViewState extends ConsumerState<ListBillView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 5),
-          child: Text('Hoá đơn', style: PrimaryStyle.bold(20)),
-        ),
         Expanded(
             child: RefreshIndicator(
                 onRefresh: () async =>

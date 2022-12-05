@@ -26,10 +26,7 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 5),
-          child: Text('Danh sách sự cố', style: PrimaryStyle.bold(20)),
-        ),
+        const SizedBox(height: 7),
         Expanded(
             child: RefreshIndicator(
                 onRefresh: () async => ref

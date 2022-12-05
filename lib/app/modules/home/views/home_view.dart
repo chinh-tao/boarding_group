@@ -31,16 +31,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
       child: ref.watch(showListMember),
     );
   }
-
-  Widget item(String title, String content) {
-    return Row(
-      children: [
-        Text(title, style: PrimaryStyle.bold(20, color: kRedColor400)),
-        const SizedBox(width: 4),
-        Text(content, style: PrimaryStyle.normal(20, color: kRedColor400))
-      ],
-    );
-  }
 }
 
 final showListMember = Provider<Widget>((ref) {
