@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import 'config.dart';
 
@@ -167,5 +168,35 @@ class Utils {
     final filedName = path.split('/').last;
     final typeFiled = filedName.split('.').last;
     return typeFiled;
+  }
+
+  static Future<String> showMonth({DateTime? initialDate}) async {
+    final format = DateFormat("yyyy-MM");
+
+    DateTime? pickedMonth = await showMonthPicker(
+        context: navKey.currentContext!,
+        initialDate:
+            initialDate ?? DateTime(DateTime.now().year, DateTime.now().month),
+        firstDate: DateTime(2018),
+        lastDate: DateTime(DateTime.now().year, DateTime.now().month),
+        locale: const Locale('vi'));
+    if (pickedMonth != null) {
+      return format.format(pickedMonth);
+    }
+    return '';
+  }
+
+  static Future<String> selectDate({required DateTime initialDate}) async {
+    final format = DateFormat("yyyy-MM-dd");
+    DateTime? pickedDate = await showDatePicker(
+        context: navKey.currentContext!,
+        initialDate: initialDate,
+        locale: const Locale('vi'),
+        firstDate: DateTime(DateTime.now().year),
+        lastDate: DateTime(DateTime.now().year + 3));
+    if (pickedDate != null) {
+      return format.format(pickedDate);
+    }
+    return '';
   }
 }

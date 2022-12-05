@@ -36,18 +36,21 @@ final _controller = ChangeNotifierProvider.autoDispose<ServiceController>(
     (ref) => ServiceController());
 
 Widget itemService(IconData icon, String text) {
-  return Card(
-    elevation: 5,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    child: Padding(
-      padding: const EdgeInsets.all(4),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(icon, size: 30, color: kIndigoBlueColor900),
-        const SizedBox(height: 5),
-        Text(text,
-            style: PrimaryStyle.regular(12, color: kRedColor600),
-            textAlign: TextAlign.center)
-      ]),
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 5),
+    child: Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(icon, size: 30, color: kIndigoBlueColor900),
+          const SizedBox(height: 5),
+          Text(text,
+              style: PrimaryStyle.regular(12, color: kRedColor600),
+              textAlign: TextAlign.center)
+        ]),
+      ),
     ),
   );
 }

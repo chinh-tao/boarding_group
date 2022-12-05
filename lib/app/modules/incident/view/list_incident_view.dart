@@ -37,13 +37,13 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
                     .loadDataIncident(ref, isRefresh: true),
                 backgroundColor: kPrimaryColor,
                 color: kWhiteColor,
-                child: ref.watch(showListMember)))
+                child: ref.watch(showList)))
       ],
     );
   }
 }
 
-final showListMember = Provider.autoDispose<Widget>((ref) {
+final showList = Provider.autoDispose<Widget>((ref) {
   if (ref.watch(incidentController).isLoading) {
     return const Center(
       child: CircularProgressIndicator(color: kPrimaryColor),

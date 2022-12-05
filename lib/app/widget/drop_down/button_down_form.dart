@@ -12,9 +12,11 @@ class ButtonDownForm extends ConsumerWidget {
       required this.list,
       this.color = kBodyText,
       this.iconSize,
+      this.keyDropdown,
       this.onChanged})
       : super(key: key);
 
+  final Key? keyDropdown;
   final String title, value;
   final List list;
   final Color color;
@@ -29,6 +31,7 @@ class ButtonDownForm extends ConsumerWidget {
         Text(title, style: PrimaryStyle.medium(17, color: color)),
         const SizedBox(height: 5),
         ButtonDown(
+          keyDropdown: keyDropdown,
             value: value, list: list, onChanged: onChanged, iconSize: iconSize)
       ],
     );

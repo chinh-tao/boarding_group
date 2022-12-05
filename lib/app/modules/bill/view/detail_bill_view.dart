@@ -112,10 +112,12 @@ class DetailBillView extends ConsumerWidget {
                         value: watch.category,
                         list: watch.categoryList,
                         color: kIndigoBlueColor900,
-                        iconSize: watch.image.isEmpty ? null : 0,
-                        onChanged: watch.image.isEmpty
-                            ? (value) => watch.billOnChanged(value)
-                            : null),
+                        iconSize: watch.image.isNotEmpty || watch.status != 0
+                            ? 0
+                            : null,
+                        onChanged: watch.image.isNotEmpty || watch.status != 0
+                            ? null
+                            : (value) => watch.billOnChanged(value)),
                     ref.watch(showPayment),
                     ref.watch(showButtonPayment)
                   ],

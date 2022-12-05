@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
 import '../../../common/auth.dart';
 import '../../../common/utils.dart';
 import '../../../model/bill_model.dart';
@@ -25,7 +24,7 @@ class BillController extends ChangeNotifier {
   var image = '';
   var category = 'Tiền mặt';
   var categoryList = ['Tiền mặt', 'Chuyển khoản'];
-  var format = DateFormat("yyyy-MM");
+  final format = DateFormat("yyyy-MM");
   var fileImage = File("");
 
   void initData(WidgetRef ref) async {
@@ -49,56 +48,57 @@ class BillController extends ChangeNotifier {
   }
 
   Future<void> loadDataBill({bool isRefresh = false}) async {
-    listBill.clear();
-    notifyListeners();
     final form = <String, dynamic>{"room": room, "month": date};
 
     if (isRefresh) isLoading = true;
     notifyListeners();
     final res = await api.get('/list-bill', queryParameters: form);
     if (isRefresh) isLoading = false;
-    if (res.statusCode == 200 && res.data["code"] == 0) {
-      final listData = res.data["payload"] as List;
-      listBill = listData.map((data) => BillModel.fromJson(data)).toList();
-      print("object123: ${listBill[0].payment}");
-      print("object123: ${listBill[0].payment!.isNotEmpty}");
-      if (listBill[0].payment!.isNotEmpty) {
-        final listPayment = listBill[0].payment!;
-        for (int i = 0; i < listPayment.length; i++) {
-          if (listPayment[i].name == userName) {
-            status = listPayment[i].status!;
-            category = listPayment[i].getCategory;
-            image = listPayment[i].getImage;
-            notifyListeners();
+    if (res.statusCode == 200) {
+      if (res.data["code"] == 0) {
+        final listData = res.data["payload"] as List;
+        listBill = listData.map((data) => BillModel.fromJson(data)).toList();
+        final deadline = listBill[0].deadline;
+        if (listBill[0].payment!.isNotEmpty) {
+          final listPayment = listBill[0].payment!;
+          for (int i = 0; i < listPayment.length; i++) {
+            if (listPayment[i].name == userName) {
+              status = checkStatus(listPayment[i].status!, deadline!);
+              category = listPayment[i].getCategory;
+              image = listPayment[i].getImage;
+              notifyListeners();
+            }
           }
+        } else {
+          isClear();
+          status = checkStatus(0, deadline!);
+          image = "";
+          notifyListeners();
         }
       } else {
-        isClear();
-        status = 0;
-        image = "";
-        notifyListeners();
+        listBill.clear();
       }
-      print("object: $image");
-      print("object1: $status");
-      print("object2: $category");
     } else {
       Utils.messError(res.data["message"]);
     }
     notifyListeners();
   }
 
+  int checkStatus(int status, String date) {
+    if (status == 0 &&
+        DateTime.parse(date).difference(DateTime.now()).inDays <= 0) {
+      return status = 2;
+    }
+    return status;
+  }
+
   void showMonth() async {
     final year = int.parse(date.substring(0, 4));
     final month = int.parse(date.substring(5, 7));
 
-    DateTime? pickedMonth = await showMonthPicker(
-        context: navKey.currentContext!,
-        initialDate: DateTime(year, month),
-        firstDate: DateTime(2018),
-        lastDate: DateTime(DateTime.now().year, DateTime.now().month),
-        locale: const Locale('vi'));
-    if (pickedMonth != null) {
-      date = format.format(pickedMonth);
+    final dateTime = await Utils.showMonth(initialDate: DateTime(year, month));
+    if (dateTime.isNotEmpty) {
+      date = dateTime;
       notifyListeners();
     }
   }

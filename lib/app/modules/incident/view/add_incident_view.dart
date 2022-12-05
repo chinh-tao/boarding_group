@@ -38,7 +38,10 @@ class _AddIncidentViewState extends ConsumerState<AddIncidentView> {
           centerTitle: true,
           title: Text("Thêm sự cố", style: PrimaryStyle.normal(20)),
           leading: IconButton(
-              onPressed: () => navKey.currentState!.pop(),
+              onPressed: () {
+                read.nameController.clear();
+                navKey.currentState!.pop();
+              },
               icon: const Icon(Icons.arrow_back_ios)),
         ),
         body: SingleChildScrollView(
@@ -54,13 +57,13 @@ class _AddIncidentViewState extends ConsumerState<AddIncidentView> {
                   title: "Mức độ",
                   value: watch.leverText,
                   list: watch.levers,
-                  onChanged: (value) => read.incidentOnChanged(value!)),
+                  onChanged: (value) => read.incidentOnChangedLever(value!)),
               const SizedBox(height: 10),
               CustomInput(
                   title: "Tên người thông báo",
                   readOnly: true,
                   background: kGreyColor400,
-                  controller: watch.nameController,
+                  controller: watch.nameSearchController,
                   err: ''),
               CustomInput(
                   title: "Số phòng",

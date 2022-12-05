@@ -21,77 +21,80 @@ class ListIncident extends ConsumerWidget {
         ],
       );
     }
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: ref.watch(incidentController).listIncident.length,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-          final listIncident =
-              ref.watch(incidentController).listIncident[index];
-          return Card(
-            elevation: 5,
-            color: listIncident.status == 1 ? kGreenColor700 : null,
-            margin: const EdgeInsets.all(6),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: InkWell(
-              onTap: () => navKey.currentState!
-                  .pushNamed(Routes.INCIDENTDETAIL, arguments: index),
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ConstrainedBox(
-                          constraints:
-                              BoxConstraints(maxWidth: size.width / 1.5),
-                          child: !hasTextOverflow(
-                                  'Tên sự cố: ${listIncident.title}')
-                              ? itemText('Tên sự cố:', " ${listIncident.title}",
-                                  listIncident.status!)
-                              : Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxWidth: size.width / 1.75),
-                                        child: Text(
-                                            'Tên sự cố: ${listIncident.title}',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.visible,
+    return SizedBox(
+      height: size.height,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: ref.watch(incidentController).listIncident.length,
+          padding: EdgeInsets.zero,
+          itemBuilder: (context, index) {
+            final listIncident =
+                ref.watch(incidentController).listIncident[index];
+            return Card(
+              elevation: 5,
+              color: listIncident.status == 1 ? kGreenColor700 : null,
+              margin: const EdgeInsets.all(6),
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: InkWell(
+                onTap: () => navKey.currentState!
+                    .pushNamed(Routes.INCIDENTDETAIL, arguments: index),
+                borderRadius: BorderRadius.circular(10),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ConstrainedBox(
+                            constraints:
+                                BoxConstraints(maxWidth: size.width / 1.5),
+                            child: !hasTextOverflow(
+                                    'Tên sự cố: ${listIncident.title}')
+                                ? itemText('Tên sự cố:', " ${listIncident.title}",
+                                    listIncident.status!)
+                                : Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              maxWidth: size.width / 1.75),
+                                          child: Text(
+                                              'Tên sự cố: ${listIncident.title}',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.visible,
+                                              style: PrimaryStyle.medium(16,
+                                                  color: listIncident.status == 1
+                                                      ? Colors.white
+                                                      : kIndigoBlueColor900)),
+                                        ),
+                                        Text("...",
                                             style: PrimaryStyle.medium(16,
                                                 color: listIncident.status == 1
                                                     ? Colors.white
-                                                    : kIndigoBlueColor900)),
-                                      ),
-                                      Text("...",
-                                          style: PrimaryStyle.medium(16,
-                                              color: listIncident.status == 1
-                                                  ? Colors.white
-                                                  : kIndigoBlueColor900))
-                                    ]),
-                        ),
-                        showLevel("${listIncident.level}")
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    itemText('Người thông báo:', " ${listIncident.userName}",
-                        listIncident.status!),
-                    const SizedBox(height: 5),
-                    itemText('Ngày thông báo:', " ${listIncident.date}",
-                        listIncident.status!)
-                  ],
+                                                    : kIndigoBlueColor900))
+                                      ]),
+                          ),
+                          showLevel("${listIncident.level}")
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      itemText('Người thông báo:', " ${listIncident.userName}",
+                          listIncident.status!),
+                      const SizedBox(height: 5),
+                      itemText('Ngày thông báo:', " ${listIncident.date}",
+                          listIncident.status!)
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }
 

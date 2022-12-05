@@ -11,9 +11,11 @@ class ButtonDown extends ConsumerWidget {
       required this.list,
       this.color = kBodyText,
       this.iconSize,
+      this.keyDropdown,
       this.onChanged})
       : super(key: key);
 
+  final Key? keyDropdown;
   final String value;
   final List list;
   final Color color;
@@ -23,6 +25,7 @@ class ButtonDown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DropdownButtonFormField2(
+      key: keyDropdown,
       onChanged: onChanged,
       style: PrimaryStyle.normal(color: color, 18),
       isExpanded: true,

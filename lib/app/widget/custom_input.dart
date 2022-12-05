@@ -22,6 +22,7 @@ class CustomInput extends ConsumerWidget {
       this.hintText = '',
       this.background,
       this.button,
+      this.onTap,
       this.onChanged})
       : super(key: key);
 
@@ -33,7 +34,7 @@ class CustomInput extends ConsumerWidget {
   final TextInputType? keyboardType;
   final bool obscureText, readOnly;
   final Widget? icons, button;
-  final Function()? onPressed;
+  final Function()? onPressed,onTap;
   final Function(String)? onChanged;
 
   @override
@@ -61,6 +62,7 @@ class CustomInput extends ConsumerWidget {
                 keyboardType: keyboardType ?? TextInputType.visiblePassword,
                 obscureText: obscureText,
                 readOnly: readOnly,
+                onTap: onTap,
                 onChanged: onChanged,
                 maxLines: maxLines,
                 decoration: InputDecoration(

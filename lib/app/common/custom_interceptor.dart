@@ -20,7 +20,7 @@ class CustomInterceptors extends Interceptor {
       Utils.messWarning(MSG_NOT_CONNECT);
       return;
     }
-    options.baseUrl = kApiUrlProduction;
+    options.baseUrl = kApiUrlStaging;
     options.headers['id_branch'] = box.read('idBranch');
     _log.i(
         'TYPE: Request,\nPATH: ${options.path},\nMETHOD: ${options.method},\nDATA: ${options.data}');

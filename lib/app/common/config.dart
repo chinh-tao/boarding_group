@@ -18,6 +18,19 @@ const kYellowColor800 = Color(0xfff9a825);
 const kGreenColor700 = Color(0xff689f38);
 const kOrangeColor800 = Color(0xffef6c00);
 
+Map<int, Color> color = {
+  50: const Color.fromRGBO(0, 105, 92, .1),
+  100: const Color.fromRGBO(0, 105, 92, .2),
+  200: const Color.fromRGBO(0, 105, 92, .3),
+  300: const Color.fromRGBO(0, 105, 92, .4),
+  400: const Color.fromRGBO(0, 105, 92, .5),
+  500: const Color.fromRGBO(0, 105, 92, .6),
+  600: const Color.fromRGBO(0, 105, 92, .7),
+  700: const Color.fromRGBO(0, 105, 92, .8),
+  800: const Color.fromRGBO(0, 105, 92, .9),
+  900: const Color.fromRGBO(0, 105, 92, 1),
+};
+
 // config message app
 const MSG_ERR_ADMIN = "Có một lỗi xảy ra, vui lòng liên hệ với admin.";
 const MSG_SYSTEM_HANDLE =
