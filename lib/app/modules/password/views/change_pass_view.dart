@@ -57,9 +57,8 @@ class ChangePassView extends ConsumerWidget {
                 content: 'Cập nhập',
                 sizeContent: 20,
                 isLoading: ref.watch(changePassController).isLoading,
-                onPressed: () async => ref
-                    .read(changePassController.notifier)
-                    .handleChangePass(ref))
+                onPressed: () async =>
+                    ref.read(changePassController.notifier).handleChangePass())
           ],
         ),
       ),

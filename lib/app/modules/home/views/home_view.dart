@@ -16,7 +16,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(homeController.notifier).initData(ref);
+      ref.read(homeController.notifier).initData();
     });
     super.initState();
   }
@@ -25,7 +25,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async =>
-          ref.read(homeController.notifier).getListMember(ref, isRefresh: true),
+          ref.read(homeController.notifier).getListMember(isRefresh: true),
       backgroundColor: kPrimaryColor,
       color: kWhiteColor,
       child: ref.watch(showListMember),

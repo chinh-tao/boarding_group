@@ -70,7 +70,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   sizeContent: 18,
                   content: "Đăng nhập",
                   onPressed: () async =>
-                      await ref.read(loginController.notifier).submit(ref)),
+                      await ref.read(loginController.notifier).submit()),
               const SizedBox(height: 22),
               if (ref.watch(loginController).arguments['category'] == '0') ...[
                 Align(

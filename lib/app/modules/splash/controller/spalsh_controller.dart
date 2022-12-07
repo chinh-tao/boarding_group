@@ -9,6 +9,10 @@ import '../../../routes/app_pages.dart';
 import '../../../common/utils.dart';
 
 class SplashController extends ChangeNotifier {
+  SplashController(this.ref);
+
+  final Ref ref;
+
   Future<File> get localPath async {
     final director = await getTemporaryDirectory();
     final path =
@@ -28,7 +32,7 @@ class SplashController extends ChangeNotifier {
     return await Utils.getDevice();
   }
 
-  Future<void> checkDevice(WidgetRef ref, {bool isLoading = false}) async {
+  Future<void> checkDevice({bool isLoading = false}) async {
     ref.read(Auth.device.notifier).state = await getIdDevice;
     final form = {"device_mobi": ref.watch(Auth.device)};
     if (isLoading) Utils.showPopupLoading();
@@ -60,4 +64,4 @@ class SplashController extends ChangeNotifier {
 }
 
 final splashController = ChangeNotifierProvider.autoDispose<SplashController>(
-    (ref) => SplashController());
+    (ref) => SplashController(ref));

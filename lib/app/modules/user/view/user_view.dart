@@ -23,7 +23,7 @@ class _UserViewState extends ConsumerState<UserView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(userController.notifier).initData(ref);
+      ref.read(userController.notifier).initData();
     });
     super.initState();
   }
@@ -55,7 +55,7 @@ class _UserViewState extends ConsumerState<UserView> {
                           top: 140,
                           child: GestureDetector(
                             onTap: () =>
-                                ref.watch(userController).showModalSheet(ref),
+                                ref.watch(userController).showModalSheet(),
                             child: Container(
                               padding: const EdgeInsets.all(7),
                               decoration: const BoxDecoration(
@@ -149,7 +149,7 @@ class _UserViewState extends ConsumerState<UserView> {
                                   colors: kIndigoBlueColor900,
                                   onPressed: () => ref
                                       .read(userController.notifier)
-                                      .handleUpdateUser(ref))
+                                      .handleUpdateUser())
                             ],
                           )
                         ],

@@ -36,7 +36,7 @@ class BodyListAccount extends ConsumerWidget {
                     return InkWell(
                       onTap: () => ref
                           .read(listAccountController.notifier)
-                          .showBottomSheet(index, ref),
+                          .showBottomSheet(index),
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border(

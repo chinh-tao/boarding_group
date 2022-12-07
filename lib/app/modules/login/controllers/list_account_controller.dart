@@ -11,11 +11,13 @@ import '../../../common/auth.dart';
 import '../../password/views/forgot_pass_view.dart';
 
 class ListAccountController extends ChangeNotifier {
+  ListAccountController(this.ref);
+
+  final Ref ref;
   final forgotPassErr = "";
   var isLoading = false;
   var isHideMenu = false;
   var listUser = <UserModel>[];
-
   final _log = Logger();
 
   void initData(context) {
@@ -23,7 +25,7 @@ class ListAccountController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showBottomSheet(int index, WidgetRef ref) {
+  void showBottomSheet(int index) {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -34,13 +36,13 @@ class ListAccountController extends ChangeNotifier {
           return BodyBottomSheet(
               removeAccount: () async {
                 navKey.currentState!.pop();
-                showRemoveAccount(index, ref);
+                showRemoveAccount(index);
               },
               user: listUser[index]);
         });
   }
 
-  Future<void> handleRemoveAccount(String email, WidgetRef ref) async {
+  Future<void> handleRemoveAccount(String email) async {
     final form = {'email': email, 'device_mobi': ref.watch(Auth.device)};
 
     isLoading = true;
@@ -61,12 +63,12 @@ class ListAccountController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showRemoveAccount(int index, WidgetRef ref) async {
+  void showRemoveAccount(int index) async {
     Utils.showMessPopup(
         content: 'Bạn có muốn gỡ tài khoản này?',
         onPressed: () async {
           navKey.currentState!.pop();
-          await handleRemoveAccount(listUser[index].email!, ref);
+          await handleRemoveAccount(listUser[index].email!);
         });
   }
 
@@ -97,4 +99,4 @@ class ListAccountController extends ChangeNotifier {
 }
 
 final listAccountController = ChangeNotifierProvider<ListAccountController>(
-    (ref) => ListAccountController());
+    (ref) => ListAccountController(ref));

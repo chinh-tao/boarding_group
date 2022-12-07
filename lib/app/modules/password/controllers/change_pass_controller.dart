@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChangePassController extends ChangeNotifier {
+  ChangePassController(this.ref);
+
   TextEditingController inputOldPass = TextEditingController();
   TextEditingController inputConfirm = TextEditingController();
   TextEditingController inputNewPass = TextEditingController();
 
+  final Ref ref;
   var isHidePassNew = true;
   var isHidePassConfirm = true;
   var isLoading = false;
@@ -44,7 +47,7 @@ class ChangePassController extends ChangeNotifier {
     return result;
   }
 
-  Future<void> handleChangePass(WidgetRef ref) async {
+  Future<void> handleChangePass() async {
     if (!validator) return;
 
     final form = {
@@ -79,4 +82,4 @@ class ChangePassController extends ChangeNotifier {
 
 final changePassController =
     ChangeNotifierProvider.autoDispose<ChangePassController>(
-        (ref) => ChangePassController());
+        (ref) => ChangePassController(ref));

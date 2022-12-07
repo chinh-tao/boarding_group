@@ -16,7 +16,7 @@ class _ListBillViewState extends ConsumerState<ListBillView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(billController.notifier).initData(ref);
+      ref.read(billController.notifier).initData();
     });
     super.initState();
   }

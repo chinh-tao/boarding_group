@@ -11,15 +11,17 @@ import 'package:logger/logger.dart';
 import '../../password/views/forgot_pass_view.dart';
 
 class LoginController extends ChangeNotifier {
+  LoginController(this.ref);
+
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPass = TextEditingController();
 
+  final Ref ref;
   var arguments = <String, dynamic>{};
   var userModel = UserModel();
   var isLoading = false;
   var listErrLogin = ["", ""];
   var isHidePass = true;
-
   final _log = Logger();
 
   void initData(context) {
@@ -64,7 +66,7 @@ class LoginController extends ChangeNotifier {
     return result;
   }
 
-  Future<void> submit(WidgetRef ref) async {
+  Future<void> submit() async {
     if (!validatorLogin) return;
 
     final form = {
@@ -114,4 +116,4 @@ class LoginController extends ChangeNotifier {
 }
 
 var loginController = ChangeNotifierProvider.autoDispose<LoginController>(
-    (ref) => LoginController());
+    (ref) => LoginController(ref));

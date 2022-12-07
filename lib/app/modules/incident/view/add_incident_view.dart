@@ -21,7 +21,7 @@ class _AddIncidentViewState extends ConsumerState<AddIncidentView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(incidentController.notifier).initData(ref, isList: false);
+      ref.read(incidentController.notifier).initData(isList: false);
     });
     super.initState();
   }
@@ -83,7 +83,7 @@ class _AddIncidentViewState extends ConsumerState<AddIncidentView> {
                   sizeContent: 18,
                   isLoading: ref.watch(incidentController).isLoadingButton,
                   content: "Thêm sự cố",
-                  onPressed: () => watch.sendIncident(ref)),
+                  onPressed: () => watch.sendIncident()),
             ]),
           ),
         ));

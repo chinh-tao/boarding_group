@@ -12,21 +12,22 @@ import '../../../routes/app_pages.dart';
 import '../../bill/view/components/search_month.dart';
 
 class RootController extends ChangeNotifier {
+  RootController(this.ref);
+
   GlobalKey<ScaffoldState> rootKey = GlobalKey<ScaffoldState>();
 
+  final Ref ref;
   var isHideMenu = false;
   var index = 0;
   var isSelected = <bool>[true, false, false, false, false, false];
 
-  void handleChangeIndex(int position, WidgetRef ref) async {
+  void handleChangeIndex(int position) async {
     Navigator.of(navKey.currentContext!).pop();
     if (position == 5) {
       box.remove('idBranch');
-      await ref
-          .read(splashController.notifier)
-          .checkDevice(ref, isLoading: true);
+      await ref.read(splashController.notifier).checkDevice(isLoading: true);
     } else if (position == 4) {
-      showInforAdmin(ref);
+      showInforAdmin();
     } else {
       index = position;
       isSelected = isSelected.map((data) => data = false).toList();
@@ -74,7 +75,7 @@ class RootController extends ChangeNotifier {
     rootKey.currentState!.openEndDrawer();
   }
 
-  void showInforAdmin(WidgetRef ref) {
+  void showInforAdmin() {
     showDialog(
         barrierDismissible: false,
         context: navKey.currentContext!,
@@ -124,4 +125,4 @@ class RootController extends ChangeNotifier {
 }
 
 final rootController = ChangeNotifierProvider.autoDispose<RootController>(
-    (ref) => RootController());
+    (ref) => RootController(ref));

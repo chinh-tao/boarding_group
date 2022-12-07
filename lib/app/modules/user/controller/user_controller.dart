@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:boarding_group/app/common/auth.dart';
 import 'package:boarding_group/app/common/global.dart';
 import 'package:boarding_group/app/common/utils.dart';
-import 'package:boarding_group/app/model/user_model.dart';
 import 'package:boarding_group/app/modules/home/controllers/home_controller.dart';
 import 'package:boarding_group/app/modules/password/views/change_pass_view.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +13,20 @@ import 'package:image_picker/image_picker.dart';
 import '../../../widget/custom_bottom_sheet.dart';
 
 class UserController extends ChangeNotifier {
+  UserController(this.ref);
+
   TextEditingController inputID = TextEditingController();
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputPhone = TextEditingController();
   TextEditingController inputName = TextEditingController();
   TextEditingController inputRoom = TextEditingController();
 
+  final Ref ref;
   var isLoading = false;
   var listErr = <String>[];
   var fileImage = File("");
 
-  void initData(WidgetRef ref) {
+  void initData() {
     inputID.text = ref.watch(Auth.user).getID;
     inputEmail.text = ref.watch(Auth.user).getEmail;
     inputPhone.text = ref.watch(Auth.user).getPhone;
@@ -34,7 +36,7 @@ class UserController extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool validator(WidgetRef ref) {
+  bool validator() {
     var result = true;
     listErr = List.filled(2, '');
     if (inputEmail.text.trim().isEmpty) {
@@ -61,9 +63,9 @@ class UserController extends ChangeNotifier {
     return result;
   }
 
-  Future<void> handleUpdateUser(WidgetRef ref) async {
+  Future<void> handleUpdateUser() async {
     Utils.handleUnfocus();
-    if (!validator(ref)) return;
+    if (!validator()) return;
     final form = <String, dynamic>{"id": ref.watch(Auth.user).getID};
     if (inputEmail.text.trim() != ref.watch(Auth.user).getEmail) {
       form['email'] = inputEmail.text;
@@ -85,7 +87,7 @@ class UserController extends ChangeNotifier {
 
     if (res.statusCode == 200 && res.data["code"] == 0) {
       Utils.messSuccess(res.data['message']);
-      await ref.read(homeController.notifier).getListMember(ref);
+      await ref.read(homeController.notifier).getListMember();
       final member = ref
           .watch(homeController)
           .listMember
@@ -106,7 +108,7 @@ class UserController extends ChangeNotifier {
             content: const ChangePassView()));
   }
 
-  void showModalSheet(WidgetRef ref) {
+  void showModalSheet() {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -130,4 +132,4 @@ class UserController extends ChangeNotifier {
 }
 
 final userController = ChangeNotifierProvider.autoDispose<UserController>(
-    (ref) => UserController());
+    (ref) => UserController(ref));

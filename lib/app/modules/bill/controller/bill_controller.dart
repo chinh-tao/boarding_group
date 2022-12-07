@@ -13,6 +13,9 @@ import '../../../routes/app_pages.dart';
 import '../../../widget/custom_bottom_sheet.dart';
 
 class BillController extends ChangeNotifier {
+  BillController(this.ref);
+
+  final Ref ref;
   var listBill = <BillModel>[];
   var isLoading = false;
   var isLoadingButton = false;
@@ -27,7 +30,7 @@ class BillController extends ChangeNotifier {
   final format = DateFormat("yyyy-MM");
   var fileImage = File("");
 
-  void initData(WidgetRef ref) async {
+  void initData() async {
     date = format.format(DateTime.now());
     isClear();
     userName = ref.watch(Auth.user).getUserName;
@@ -150,7 +153,7 @@ class BillController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> showModalSheet(WidgetRef ref) async {
+  Future<void> showModalSheet() async {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -173,4 +176,4 @@ class BillController extends ChangeNotifier {
 }
 
 final billController =
-    ChangeNotifierProvider<BillController>((ref) => BillController());
+    ChangeNotifierProvider<BillController>((ref) => BillController(ref));

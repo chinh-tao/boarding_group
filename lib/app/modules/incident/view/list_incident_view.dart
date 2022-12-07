@@ -16,7 +16,7 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(incidentController.notifier).initData(ref);
+      ref.read(incidentController.notifier).initData();
     });
     super.initState();
   }
@@ -31,7 +31,7 @@ class _ListIncidentState extends ConsumerState<ListIncidentView> {
             child: RefreshIndicator(
                 onRefresh: () async => ref
                     .read(incidentController.notifier)
-                    .loadDataIncident(ref, isRefresh: true),
+                    .loadDataIncident(isRefresh: true),
                 backgroundColor: kPrimaryColor,
                 color: kWhiteColor,
                 child: ref.watch(showList)))

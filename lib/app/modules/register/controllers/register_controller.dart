@@ -12,18 +12,19 @@ import 'package:logger/logger.dart';
 import '../../../common/auth.dart';
 
 class RegisterController extends ChangeNotifier {
+  RegisterController(this.ref);
+
   TextEditingController inputEmail = TextEditingController();
   TextEditingController inputCode = TextEditingController();
   TextEditingController inputName = TextEditingController();
 
+  Timer? time;
+  final Ref ref;
   final isLoadImage = false;
   var isLoading = false;
   var listError = ["", ""];
-
   final _log = Logger();
   var fileImage = File("");
-
-  Timer? time;
 
   bool get validator {
     var result = true;
@@ -47,12 +48,12 @@ class RegisterController extends ChangeNotifier {
     return result;
   }
 
-  void submit(WidgetRef ref) async {
+  void submit() async {
     if (!validator) return;
-    await registerAccount(ref);
+    await registerAccount();
   }
 
-  void showModalSheet(WidgetRef ref) {
+  void showModalSheet() {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -74,7 +75,7 @@ class RegisterController extends ChangeNotifier {
         });
   }
 
-  Future<void> registerAccount(WidgetRef ref) async {
+  Future<void> registerAccount() async {
     final form = <String, dynamic>{
       "id": inputCode.text,
       "email": inputEmail.text,
@@ -122,4 +123,4 @@ class RegisterController extends ChangeNotifier {
 
 final registerController =
     ChangeNotifierProvider.autoDispose<RegisterController>(
-        (ref) => RegisterController());
+        (ref) => RegisterController(ref));

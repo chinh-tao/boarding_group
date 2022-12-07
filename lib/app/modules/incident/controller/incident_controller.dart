@@ -7,6 +7,8 @@ import '../../../common/auth.dart';
 import '../../../common/utils.dart';
 
 class IncidentController extends ChangeNotifier {
+  IncidentController(this.ref);
+
   final GlobalKey<FormFieldState> keyDropDownLevel =
       GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> keyDropDownStatus =
@@ -19,6 +21,7 @@ class IncidentController extends ChangeNotifier {
   final TextEditingController contentController = TextEditingController();
   final TextEditingController dateSearchController = TextEditingController();
 
+  final Ref ref;
   final levers = ['Cao', 'Trung bình', 'Thấp'];
   final leversSearch = ['Tất cả', 'Cao', 'Trung bình', 'Thấp'];
   final status = ['Tất cả', 'Đang xử lý', 'Đã xử lý'];
@@ -29,11 +32,11 @@ class IncidentController extends ChangeNotifier {
   var leverSearch = "Tất cả";
   var statusSearch = "Tất cả";
 
-  void initData(WidgetRef ref, {bool isList = true}) async {
+  void initData({bool isList = true}) async {
     roomController.text = ref.watch(Auth.user).getRoomNumber;
     if (isList) {
       clearInput(isRoot: true);
-      loadDataIncident(ref);
+      loadDataIncident();
     } else {
       nameController.text = ref.watch(Auth.user).getUserName;
       listErr = ["", ""];
@@ -44,7 +47,7 @@ class IncidentController extends ChangeNotifier {
   }
 
   // list incident
-  Future<void> loadDataIncident(WidgetRef ref, {bool isRefresh = false}) async {
+  Future<void> loadDataIncident({bool isRefresh = false}) async {
     final form = <String, dynamic>{"room": roomController.text.trim()};
 
     if (nameController.text.isNotEmpty) {
@@ -137,7 +140,7 @@ class IncidentController extends ChangeNotifier {
     return result;
   }
 
-  void sendIncident(WidgetRef ref) async {
+  void sendIncident() async {
     Utils.handleUnfocus();
     if (!validator) return;
     isLoadingButton = true;
@@ -152,7 +155,7 @@ class IncidentController extends ChangeNotifier {
     final res = await api.post('/room-incident', data: form);
     if (res.statusCode == 200 && res.data["code"] == 0) {
       Utils.messSuccess(res.data["message"]);
-      await loadDataIncident(ref);
+      await loadDataIncident();
       isLoadingButton = false;
       navKey.currentState!.pop();
       nameController.clear();
@@ -164,5 +167,5 @@ class IncidentController extends ChangeNotifier {
   }
 }
 
-final incidentController =
-    ChangeNotifierProvider<IncidentController>((ref) => IncidentController());
+final incidentController = ChangeNotifierProvider<IncidentController>(
+    (ref) => IncidentController(ref));

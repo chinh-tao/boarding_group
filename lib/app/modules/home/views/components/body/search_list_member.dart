@@ -35,7 +35,7 @@ class SearchListMember extends ConsumerWidget {
               sizeContent: 20,
               onPressed: () async {
                 navKey.currentState!.pop();
-                await ref.read(homeController.notifier).getListMember(ref);
+                await ref.read(homeController.notifier).getListMember();
               })
         ],
       ),

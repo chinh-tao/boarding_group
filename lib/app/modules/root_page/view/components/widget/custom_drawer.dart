@@ -85,8 +85,7 @@ class CustomDrawer extends ConsumerWidget {
 
   Widget options(IconData icons, String title, WidgetRef ref, int index) {
     return ListTile(
-      onTap: () =>
-          ref.read(rootController.notifier).handleChangeIndex(index, ref),
+      onTap: () => ref.read(rootController.notifier).handleChangeIndex(index),
       tileColor: ref.watch(background(index)),
       leading: Icon(icons, color: ref.watch(colors(index)), size: 30),
       title: Text(title,

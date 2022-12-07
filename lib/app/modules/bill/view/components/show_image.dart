@@ -16,7 +16,7 @@ class ShowImage extends ConsumerWidget {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: GestureDetector(
-            onTap: watch.image.isEmpty ? () => read.showModalSheet(ref) : null,
+            onTap: watch.image.isEmpty ? () => read.showModalSheet() : null,
             child: Container(
                 height: 200,
                 width: 130,

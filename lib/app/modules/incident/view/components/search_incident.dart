@@ -73,7 +73,7 @@ class _SearchIncidentState extends ConsumerState<SearchIncident> {
                       content: "Tim kiếm",
                       onPressed: () async {
                         navKey.currentState!.pop();
-                        await read.loadDataIncident(ref);
+                        await read.loadDataIncident();
                       }),
                 ],
               ),

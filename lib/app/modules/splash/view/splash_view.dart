@@ -17,7 +17,7 @@ class _SplashViewState extends ConsumerState<SplashView>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(splashController.notifier).checkDevice(ref);
+      ref.read(splashController.notifier).checkDevice();
     });
     super.initState();
   }
